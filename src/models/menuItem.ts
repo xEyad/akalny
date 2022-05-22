@@ -1,6 +1,7 @@
 interface MenuItem
 {
+    id?:string;
     name:string,
-    price:number;
+    price?:number;
 }
 export default MenuItem
