@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { Row,Col } from 'react-bootstrap';
 import './Login.css';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-
 import {
-    BrowserRouter as Router,
-    Route,
-    Routes,
-    Link
+    useNavigate 
   } from "react-router-dom";
+  
 
   
 function Login() {
@@ -26,7 +23,22 @@ function Login() {
 }
 
 function LoginBox() {
+    //hooks
     const [name, setName] = useState("");
+    function canPass():boolean{        
+        if(name)
+            return true
+        else
+            return false;
+    }    
+    const navigate = useNavigate();
+
+    //methods
+    function onCreateOrder(){navigate('/createOrder')}
+    function onJoinOrder(){navigate('/joinOrder')}
+
+
+    //UI
     return (  
         <div className='loginBox'>
             <h1 className='text-center'>عايز أكُل</h1>
@@ -34,8 +46,10 @@ function LoginBox() {
             <Form.Label>Your name </Form.Label>
             <Form.Control type="text" placeholder="hamdy el sokra" onChange={event=>setName(event.target.value)}/>
             <hr />
-            <div className='text-center'>
-                <Button variant="primary" className='text-center'>Submit</Button>{' '}
+            <div className='text-center d-flex justify-content-center'>
+                <Button variant="primary" className='text-center' onClick={onJoinOrder} disabled={!canPass()}>Join order</Button>
+                <div style={{width:'20px'}}></div>
+                <Button variant="primary" className='text-center' onClick={onCreateOrder}  disabled={!canPass()}>Create new order</Button>
             </div>
         </div>
     );
