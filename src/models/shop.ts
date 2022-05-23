@@ -2,6 +2,7 @@ import MenuItem from "./menuItem";
 
 interface Shop
 {
+    id?:string;
     name?:string;
     delivery?:number;
     vatPercentage?:number;

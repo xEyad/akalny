@@ -2,13 +2,13 @@ import Shop from "models/shop";
 import MenuItem from "models/menuItem";
 import { FunctionComponent,useState,useReducer, JSXElementConstructor, ReactElement, ReactFragment, ReactPortal  } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
-import "./createShop.css";
+import "./createShopScreen.css";
 
 interface CreateShopProps {
     
 }
  
-const CreateShop: FunctionComponent<CreateShopProps> = () => {
+const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     
     const [activeItem, setActiveItem] = useState<MenuItem>({name:"",price:undefined});
 
@@ -136,4 +136,4 @@ const CreateShop: FunctionComponent<CreateShopProps> = () => {
      );
 }
  
-export default CreateShop;
+export default CreateShopScreen;

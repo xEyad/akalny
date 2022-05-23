@@ -1,4 +1,4 @@
-import Login from 'login/Login';
+import Login from 'loginScreen/loginScreen';
 import React from 'react';
 import './App.css';
 import {
@@ -7,7 +7,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import CreateShop from 'createShop/createShop';
+import CreateShop from 'createShopScreen/createShopScreen';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 
 
