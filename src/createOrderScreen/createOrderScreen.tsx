@@ -2,12 +2,13 @@ import AppState from "mocks/appState";
 import Shop from "models/shop";
 import { useState,useEffect } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import './createOrderScreen.css';
 function CreateOrderScreen() 
 {
     //should be const
     let [shops, setShops] = useState<Shop[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
       setShops(AppState.shops);
@@ -32,7 +33,14 @@ function CreateOrderScreen()
 
     function onSelectShop(id:string)
     {
-        const idx = shops.findIndex((item)=>item.id==id);
+        const shop = shops.find((item)=>item.id==id);
+        AppState.orders.push({
+            owner:{id:'3',name:'sayed'},
+            id:'5',
+            shop:shop,
+            requests:[]
+        });
+        navigate('/manageOrder/5')
     }
 
     function instructions()
@@ -56,7 +64,7 @@ function CreateOrderScreen()
                 <td>{item.vatPercentage} %</td>
                 <td>{item.menu?.length||-1+1} </td>
                 <td className="d-flex justify-content-center">
-                    <Button variant="success" onClick={()=>{}}>Select</Button>
+                    <Button variant="success" onClick={()=>{onSelectShop(item.id as string)}}>Select</Button>
                     <div className="mx-1"></div>
                     <Button variant="primary" onClick={()=>{}}>Edit</Button>
                     <div className="mx-1"></div>

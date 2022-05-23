@@ -11,6 +11,7 @@ import CreateShop from 'createShopScreen/createShopScreen';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import ShopsScreen from 'shopsScreen/shopsScreen';
 import CreateOrderScreen from 'createOrderScreen/createOrderScreen';
+import OrderDetailsScreen from 'orderDetailsScreen/orderDetailsScreen';
 
 
 function App() {
@@ -53,6 +54,8 @@ function App() {
 
         <Route path="/orders" element={<CreateShop/>} />
         <Route path="/createOrder" element={<CreateOrderScreen/>} />
+
+        <Route path="/manageOrder/:id" element={<OrderDetailsScreen/>} />
         
         <Route path="/" element={<Login/>} />
       </Routes>
