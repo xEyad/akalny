@@ -3,7 +3,7 @@ class AppState {
     constructor() {
         
     }
-    shops = [
+    static shops = [
         {
             "id":"1",
             "name":"shabrawy",

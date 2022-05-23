@@ -1,8 +1,10 @@
 import Shop from "models/shop";
 import MenuItem from "models/menuItem";
-import { FunctionComponent,useState,useReducer, JSXElementConstructor, ReactElement, ReactFragment, ReactPortal  } from "react";
+import { FunctionComponent,useState,useReducer,   } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
 import "./createShopScreen.css";
+import AppState from "mocks/appState";
+import { useNavigate } from "react-router-dom";
 
 interface CreateShopProps {
     
@@ -10,9 +12,9 @@ interface CreateShopProps {
  
 const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     
-    const [activeItem, setActiveItem] = useState<MenuItem>({name:"",price:undefined});
-
-    const initialState:Shop = {menu:[] };
+    const [activeItem, setActiveItem] = useState<MenuItem>({name:"",price:0});
+    let navigate = useNavigate();
+    const initialState:Shop = {menu:[],vatPercentage:14 };
     const [shop, updateShop] = useReducer(
         (shop: Shop, updates: Shop) => ({
             ...shop,
@@ -32,6 +34,14 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     {
         shop?.menu?.splice(index,1);
         updateShop({});
+    }
+
+    function onCreateShop()
+    {        
+        //should be creation to firebase or api
+        shop.id = Math.random().toString();
+        AppState.shops.push(JSON.parse(JSON.stringify(shop)) as any);
+        navigate(-1);
     }
 
     //UI
@@ -88,7 +98,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
                 <td><Button variant="danger" onClick={()=>deleteMenuItem(index)}>Delete</Button></td>
             </tr> 
             );
-        return <Table striped bordered hover variant="dark">
+        return <Table striped bordered hover variant="dark" responsive>
             <thead>
                 <tr>
                 <th>#</th>
@@ -127,7 +137,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
                 </Row>
                 <Row>
                     <Col className="text-center">
-                    <Button>Create shop</Button>
+                    <Button onClick={onCreateShop}>Create shop</Button>
                     </Col> 
                 </Row>
             </Container>

@@ -9,6 +9,8 @@ import {
 } from "react-router-dom";
 import CreateShop from 'createShopScreen/createShopScreen';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import ShopsScreen from 'shopsScreen/shopsScreen';
+import CreateOrderScreen from 'createOrderScreen/createOrderScreen';
 
 
 function App() {
@@ -47,10 +49,10 @@ function App() {
         <Route path="/home" element={<Login/>} />
 
         <Route path="/createShop" element={<CreateShop/>} />
-        <Route path="/shops" element={<CreateShop/>} />
+        <Route path="/shops" element={<ShopsScreen/>} />
 
         <Route path="/orders" element={<CreateShop/>} />
-        <Route path="/createOrder" element={<CreateShop/>} />
+        <Route path="/createOrder" element={<CreateOrderScreen/>} />
         
         <Route path="/" element={<Login/>} />
       </Routes>
