@@ -1,10 +1,18 @@
+import { FirebaseApp } from "firebase/app";
 import { Order } from "models/order";
 import Shop from "models/shop";
+import { getFirestore, } from 'firebase/firestore';
 
 ///mega class to mock app state/DB/Backend until we connect a backend
 class AppState {
     constructor() {
         
+    }
+    static firebaseApp:FirebaseApp; 
+    static get fireStore(){return getFirestore(AppState.firebaseApp)};
+    static activeUser = {
+        "name":"eyad",
+        "id":"2"
     }
     static shops:Shop[] = [
         {
@@ -63,6 +71,7 @@ class AppState {
     static orders:Order[] = [
         {
             "id":"1",
+            "is_active":false,
             "owner":{
                 "name":"el sisi",
                 "id":"1"
@@ -93,8 +102,11 @@ class AppState {
             "requests":[
                 {
                     "id":"1",
-                    "item_id":"1",
-                    "price":1,
+                    "item":{
+                        "id":"1",
+                        "price":11,
+                        "name":"fool"
+                    },
                     "qty":1,
                     "date_modified":"1653315575",
                     "user":{
@@ -104,8 +116,11 @@ class AppState {
                 },
                 {
                     "id":"2",
-                    "item_id":"3",
-                    "item_price":1,
+                    "item":{
+                        "id":"3",
+                        "price":3,
+                        "name":"eggs"
+                    },
                     "qty":3,
                     "date_modified":"1653315575",
                     "user":{

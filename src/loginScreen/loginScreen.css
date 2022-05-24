@@ -4,6 +4,16 @@
     height: 100%;
 }
 
+.link-btn
+{
+    text-decoration: underline;
+    cursor: pointer;
+}
+.link-btn:hover
+{
+    color: navajowhite;
+}
+
 .loginBox{
     width: 500px;
     /* height: 500px; */

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect, useRef } from 'react';
 import { Container } from 'react-bootstrap';
 import { Row,Col } from 'react-bootstrap';
 import './loginScreen.css';
@@ -7,53 +7,138 @@ import Button from 'react-bootstrap/Button';
 import {
     useNavigate 
   } from "react-router-dom";
-  
-
+import { collection,doc, setDoc, addDoc } from 'firebase/firestore';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import AppState from 'mocks/appState';
+import { User } from 'models/user';
   
 function Login() {
+    //hooks
+    const [creationName, setcreationName] = useState<string|undefined>(undefined);
+    const [user, setUser] = useState<User|undefined>({'id':"defaulttto"});
+    const [creationMode, setCreationMode] = useState<"create"|"select">("select");
+    const navigate = useNavigate();
+    const [usersSnapshot, loadingCollection, error] = useCollection(
+        collection(AppState.fireStore, 'users'),
+        {
+            snapshotListenOptions: { includeMetadataChanges: true },
+        }
+    );
+
+    //methods
+    function onCreateOrder(){navigate('/createOrder')}
+    function onJoinOrder(){navigate('/joinOrder')}
+    function getUsers():User[] {
+        const users = usersSnapshot?.docs.map((userDoc)=>{
+        const user = (userDoc.data() as User);
+        user.id = userDoc.id;
+        return user;
+        });
+        return users as User[];
+    }
+
+    function canPass():boolean{        
+        if(user && user.id != "defaulttto")
+            return true
+        else
+            return false;
+    }    
+
+    function onUserSelected(user:User)
+    {
+        setUser(user);
+    }
+
+    function changeCreationMode(mode:"create" | "select")
+    {
+        setCreationMode(mode);
+        setUser({'id':"defaulttto"});
+    }
+
+    async function onCreateUser(name:string) 
+    {
+        const docRef = await addDoc(collection(AppState.fireStore,'users'),{'name':name});
+        changeCreationMode("select");
+        setUser(getUsers().find((user)=>user.id == docRef.id)) //TODO: make sure that users are updated before setting user
+    }
+
+    //UI    
+    function authField()
+    {
+        if(creationMode=="select")
+            return selectUserField()
+        else if(creationMode=="create")
+            return createUserField();
+        else
+            return (<>ERROR</>);
+    }
+
+    function loginBox() 
+    {        
+        return (  
+            <div className='loginBox'>
+                <h1 className='text-center'>عايز أكُل</h1>
+                <hr />
+                {authField()}
+                <hr />
+                <div className='text-center d-flex justify-content-center'>
+                    <Button variant="primary" className='text-center' onClick={onJoinOrder} disabled={!canPass()}>Join order</Button>
+                    <div style={{width:'20px'}}></div>
+                    <Button variant="primary" className='text-center' onClick={onCreateOrder}  disabled={!canPass()}>Create new order</Button>
+                </div>
+            </div>
+        );
+    }
+
+    function selectUserField()
+    {
+        if(loadingCollection)
+        {
+            return <p>loading...</p>
+        }
+        const options = getUsers().map(                
+            (user)=>(<option key={user.id} value={user.id}>{user.name}</option>)
+        )
+        return <>
+            <Form.Label>
+                Select yourself from existing users or 
+                <span className='link-btn' onClick={()=>changeCreationMode("create")}> Add new</span>
+            </Form.Label>
+            <Form.Select 
+            value={user?.id as string | 'defaulttto'}
+            onChange={    
+                (ev)=>{
+                    const selectedUser = getUsers().find((user,i,arr)=>user.id == ev.currentTarget.value) as User;
+                    onUserSelected(selectedUser);
+                } 
+            }
+            >
+                <option disabled value={'defaulttto'}>Please select user</option>
+                {options}
+            </Form.Select>
+        </>
+    }
+
+    function createUserField()
+    {
+        return <>
+            <Form.Label>Make Your user or <span className='link-btn'onClick={()=>changeCreationMode("select")}> Select from existing users</span> </Form.Label>
+            <div className="d-flex">
+                <Form.Control type="text" placeholder="hamdy el sokra" value={creationName} onChange={(ev)=>setcreationName(ev.currentTarget.value)}/>
+                <Button className='ms-2' disabled={!creationName} onClick={()=>onCreateUser(creationName as string)}>Create</Button>
+            </div>
+        </>
+    }
+
     return <div className='login'>
         <Container className='h-100 d-flex justify-content-center align-content-center'>
             <Row className=''>
                 <Col className='h-100 d-flex flex-column justify-content-center'>
-                    <LoginBox></LoginBox>           
+                    {loginBox()}  
                 </Col>
             </Row>
         </Container>
     </div>
 }
-
-function LoginBox() {
-    //hooks
-    const [name, setName] = useState("");
-    function canPass():boolean{        
-        if(name)
-            return true
-        else
-            return false;
-    }    
-    const navigate = useNavigate();
-
-    //methods
-    function onCreateOrder(){navigate('/createOrder')}
-    function onJoinOrder(){navigate('/joinOrder')}
-
-
-    //UI
-    return (  
-        <div className='loginBox'>
-            <h1 className='text-center'>عايز أكُل</h1>
-            <hr />
-            <Form.Label>Your name </Form.Label>
-            <Form.Control type="text" placeholder="hamdy el sokra" onChange={event=>setName(event.target.value)}/>
-            <hr />
-            <div className='text-center d-flex justify-content-center'>
-                <Button variant="primary" className='text-center' onClick={onJoinOrder} disabled={!canPass()}>Join order</Button>
-                <div style={{width:'20px'}}></div>
-                <Button variant="primary" className='text-center' onClick={onCreateOrder}  disabled={!canPass()}>Create new order</Button>
-            </div>
-        </div>
-    );
-}
-
 
 export default Login;

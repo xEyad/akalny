@@ -35,6 +35,7 @@ function CreateOrderScreen()
     {
         const shop = shops.find((item)=>item.id==id);
         AppState.orders.push({
+            is_active:true,
             owner:{id:'3',name:'sayed'},
             id:'5',
             shop:shop,

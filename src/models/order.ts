@@ -6,6 +6,7 @@ export interface Order {
     id?:       string;
     owner?:    User;
     shop?:     Shop;
+    is_active: boolean;
     requests?: OrderRequest[];
 }
 

@@ -7,3 +7,11 @@ td,tr{
     vertical-align: middle;
     text-align: center;
 }
+
+.order-active{
+    color: green;
+}
+
+.order-dead{
+    color: red;
+}

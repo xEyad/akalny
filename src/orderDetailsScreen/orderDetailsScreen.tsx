@@ -7,12 +7,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Order } from "models/order";
 import SummaryView from "./summaryView/summaryView";
 
+
+
 interface OrderDetailsScreenProps {
 }
  
 const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
+    const classNames = require('classnames');
     const {id} = useParams();
-    let [order, setOrder] = useState<Order>({});
+    let [order, setOrder] = useState<Order>({} as any);
     
    useEffect(() => {
     setOrder(AppState.orders.find((item)=>item.id==id) as Order);
@@ -22,20 +25,26 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
      }
    }, [])
    
-    
+   function statusStyle() : string
+   {
+    return classNames(
+        {'order-active':order.is_active},
+        {'order-dead':!order.is_active},
+    );
+   } 
     return ( 
         <div id="page">
             <Container>
             <Row>
                 <Col>
                     <h1 className="text-center">Manage your order</h1>
-                    <h4 className="text-center">{order?.shop?.name || "Loading..."}</h4>
+                    <h4 className={"text-center " + statusStyle()} >{order?.shop?.name || "Loading..."}</h4>
                     <hr />
                 </Col>
             </Row>
             <Row>
                 <Col>
-                <SummaryView></SummaryView>
+                <SummaryView order={order}></SummaryView>
                 </Col>
             </Row>
         </Container>
