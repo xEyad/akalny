@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import {
     useNavigate 
   } from "react-router-dom";
-import { collection,doc, setDoc, addDoc } from 'firebase/firestore';
+import { collection,doc, setDoc, addDoc, getDocs } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import AppState from 'mocks/appState';
 import { User } from 'models/user';
@@ -18,12 +18,16 @@ function Login() {
     const [user, setUser] = useState<User|undefined>({'id':"defaulttto"});
     const [creationMode, setCreationMode] = useState<"create"|"select">("select");
     const navigate = useNavigate();
-    const [usersSnapshot, loadingCollection, error] = useCollection(
+    let [usersSnapshot, loadingCollection, error] = useCollection(
         collection(AppState.fireStore, 'users'),
         {
             snapshotListenOptions: { includeMetadataChanges: true },
         }
     );
+
+    useEffect(()=>{
+        console.log('Snapshot updated')
+    },[usersSnapshot]);
 
     //methods
     function onCreateOrder(){navigate('/createOrder')}
@@ -59,7 +63,9 @@ function Login() {
     {
         const docRef = await addDoc(collection(AppState.fireStore,'users'),{'name':name});
         changeCreationMode("select");
-        setUser(getUsers().find((user)=>user.id == docRef.id)) //TODO: make sure that users are updated before setting user
+        usersSnapshot = (await getDocs(collection(AppState.fireStore,'users'))); //TODO: not best practice, but it works   
+        setUser(getUsers().find((user)=>user.id == docRef.id)) 
+        setcreationName(undefined);
     }
 
     //UI    
