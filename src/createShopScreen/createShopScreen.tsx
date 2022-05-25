@@ -1,10 +1,11 @@
 import Shop from "models/shop";
 import MenuItem from "models/menuItem";
-import { FunctionComponent,useState,useReducer,   } from "react";
+import { FunctionComponent,useState,useReducer, useEffect,   } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
 import "./createShopScreen.css";
 import AppState from "mocks/appState";
 import { useNavigate } from "react-router-dom";
+import { collection,doc, setDoc, addDoc, getDocs } from 'firebase/firestore';
 
 interface CreateShopProps {
     
@@ -12,6 +13,7 @@ interface CreateShopProps {
  
 const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     
+    //hooks
     const [activeItem, setActiveItem] = useState<MenuItem>({name:"",price:0});
     let navigate = useNavigate();
     const initialState:Shop = {menu:[],vatPercentage:14 };
@@ -23,6 +25,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
         initialState
     );
 
+    //methods
     function addMenuItem(item:MenuItem)
     {
         shop?.menu?.push(item);
@@ -36,11 +39,9 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
         updateShop({});
     }
 
-    function onCreateShop()
+    async function onCreateShop()
     {        
-        //should be creation to firebase or api
-        shop.id = Math.random().toString();
-        AppState.shops.push(JSON.parse(JSON.stringify(shop)) as any);
+        const docRef = await addDoc(collection(AppState.fireStore,'shops'),JSON.parse(JSON.stringify(shop)));
         navigate(-1);
     }
 
