@@ -25,13 +25,16 @@ function Login() {
         }
     );
 
-    useEffect(()=>{
-        console.log('Snapshot updated')
-    },[usersSnapshot]);
 
     //methods
-    function onCreateOrder(){navigate('/createOrder')}
-    function onJoinOrder(){navigate('/joinOrder')}
+    function onCreateOrder(){
+        AppState.setActiveUser(user as User);
+        navigate('/createOrder')
+    }
+    function onJoinOrder(){
+        AppState.setActiveUser(user as User);
+        navigate('/joinOrder')
+    }
     function getUsers():User[] {
         const users = usersSnapshot?.docs.map((userDoc)=>{
         const user = (userDoc.data() as User);
@@ -69,6 +72,18 @@ function Login() {
     }
 
     //UI    
+
+    
+    return <div className='login'>
+        <Container className='h-100 d-flex justify-content-center align-content-center'>
+            <Row className=''>
+                <Col className='h-100 d-flex flex-column justify-content-center'>
+                    {loginBox()}  
+                </Col>
+            </Row>
+        </Container>
+    </div>
+
     function authField()
     {
         if(creationMode=="select")
@@ -136,15 +151,6 @@ function Login() {
         </>
     }
 
-    return <div className='login'>
-        <Container className='h-100 d-flex justify-content-center align-content-center'>
-            <Row className=''>
-                <Col className='h-100 d-flex flex-column justify-content-center'>
-                    {loginBox()}  
-                </Col>
-            </Row>
-        </Container>
-    </div>
 }
 
 export default Login;

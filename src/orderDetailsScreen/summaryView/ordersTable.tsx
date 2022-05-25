@@ -1,6 +1,6 @@
 import AppState from "mocks/appState";
 import { Order } from "models/order";
-import { OrderRequest } from "models/requests";
+import { OrderRequest } from "models/orderRequest";
 import { FunctionComponent } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
 
@@ -36,8 +36,9 @@ const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
                 <td>{index+1}</td>
                 <td>{request.user?.name}</td>
                 <td>{request.item?.name}</td>
-                <td>{request.qty}</td>
-                <td>{request.date_modified}</td>
+                <td>{request.quantity}</td>
+                <td>{request.item?.price}</td>
+                <td>{(new Date(request.date_modified as number)).toUTCString()}</td>
                 <td className="d-flex justify-content-center">
                 {rowAction(request)}
                 </td>
@@ -50,6 +51,7 @@ const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
                 <th>User</th>
                 <th>Item</th>
                 <th>Qunatity</th>
+                <th>Unit price</th>
                 <th>Date</th>
                 <th>Actions</th>
                 </tr>

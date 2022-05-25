@@ -3,21 +3,29 @@ import Shop from "models/shop";
 import { useState,useEffect } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { collection,doc, setDoc, addDoc, getDocs, DocumentReference, getDoc } from 'firebase/firestore';
+import { useCollection } from 'react-firebase-hooks/firestore';
 import './createOrderScreen.css';
 function CreateOrderScreen() 
 {
-    //should be const
-    let [shops, setShops] = useState<Shop[]>([]);
+    let [shopsSnapshot, loadingCollection, error] = useCollection(
+        collection(AppState.fireStore, 'shops'),
+        {
+            snapshotListenOptions: { includeMetadataChanges: true },
+        }
+    );
+    useEffect(() => {
+        const shops = shopsSnapshot?.docs.map((shopDoc)=>{
+            const shop = (shopDoc.data() as Shop);
+            shop.id = shopDoc.id;
+            return shop;
+            });
+        setShops(shops as Shop[]);
+    }, [shopsSnapshot])
+    
+    const [shops, setShops] = useState<Shop[]>([]);
     const navigate = useNavigate();
 
-    useEffect(() => {
-      setShops(AppState.shops);
-    
-      return () => {
-        //do cleaning, possibly close firebase socket
-      }
-      //empty array, means run once
-    }, [])
     
     function onDeleteShop(id:string)
     {
@@ -31,17 +39,17 @@ function CreateOrderScreen()
         const idx = shops.findIndex((item)=>item.id==id);
     }
 
-    function onSelectShop(id:string)
+    async function onSelectShop(id:string)
     {
         const shop = shops.find((item)=>item.id==id);
-        AppState.orders.push({
+        const docRef = await addDoc(collection(AppState.fireStore,'orders'),
+        {
             is_active:true,
-            owner:{id:'3',name:'sayed'},
-            id:'5',
-            shop:shop,
+            owner:AppState.activeUser,
+            shop: doc(AppState.fireStore,`shops/${shop?.id}`),
             requests:[]
         });
-        navigate('/manageOrder/5')
+        navigate(`/manageOrder/${docRef.id}`);
     }
 
     function instructions()
@@ -56,6 +64,12 @@ function CreateOrderScreen()
 
     function shopsTable()
     {
+        if(!shops || shops.length == 0)
+        {
+            return (<>
+                <h3>Their are no shops found</h3>
+            </>);
+        }
         const shopRows = shops.map(
             (item,index) =>    
             <tr key={index+1}>
@@ -104,7 +118,7 @@ function CreateOrderScreen()
                 <Col>
                     {instructions()}
                     <div className="my-2"></div>
-                    {shopsTable()}
+                    {loadingCollection ?"Loading...":shopsTable()}
                 </Col>
             </Row>
         </Container>

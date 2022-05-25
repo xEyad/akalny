@@ -16,7 +16,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     //hooks
     const [activeItem, setActiveItem] = useState<MenuItem>({name:"",price:0});
     let navigate = useNavigate();
-    const initialState:Shop = {menu:[],vatPercentage:14 };
+    const initialState:Shop = {menu:[],vatPercentage:14,delivery:0,name:"", };
     const [shop, updateShop] = useReducer(
         (shop: Shop, updates: Shop) => ({
             ...shop,
@@ -29,14 +29,14 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     function addMenuItem(item:MenuItem)
     {
         shop?.menu?.push(item);
-        updateShop({});
+        updateShop({} as any);
         setActiveItem({name:"",price:0});
     }
 
     function deleteMenuItem(index:number)
     {
         shop?.menu?.splice(index,1);
-        updateShop({});
+        updateShop({} as any);
     }
 
     async function onCreateShop()
@@ -50,7 +50,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     {
         return <>
         <Form.Label>Shop name</Form.Label>
-        <Form.Control type="text" placeholder="Shabrawy" onChange={(event)=>updateShop({name:event.target.value})}/>
+        <Form.Control type="text" placeholder="Shabrawy" onChange={(event)=>updateShop({name:event.target.value} as any)}/>
         </>
     }
 
@@ -58,7 +58,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     {
         return <>
         <Form.Label>VAT</Form.Label>
-        <Form.Control type="number" placeholder="14%" value={14} onChange={(event)=>updateShop({vatPercentage:Number(event.target.value)})}/>
+        <Form.Control type="number" placeholder="14%" value={14} onChange={(event)=>updateShop({vatPercentage:Number(event.target.value)} as any)}/>
         </>
     }
 
@@ -66,7 +66,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     {
         return <>
         <Form.Label>Delivery</Form.Label>
-        <Form.Control type="number" placeholder="x EGP" onChange={(event)=>updateShop({delivery:Number(event.target.value)})}/>
+        <Form.Control type="number" placeholder="x EGP" onChange={(event)=>updateShop({delivery:Number(event.target.value)} as any)}/>
         </>
     }
 

@@ -6,33 +6,37 @@ import AppState from "mocks/appState";
 import { useNavigate, useParams } from "react-router-dom";
 import { Order } from "models/order";
 import SummaryView from "./summaryView/summaryView";
-
+import { useDocument } from "react-firebase-hooks/firestore";
+import { doc, DocumentData, DocumentSnapshot, getDoc } from "firebase/firestore";
+import { FirebaseConverters } from "models/firebaseConverters";
 
 
 interface OrderDetailsScreenProps {
 }
  
 const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
+    //hooks
     const classNames = require('classnames');
     const {id} = useParams();
     let [order, setOrder] = useState<Order>({} as any);
-    
-   useEffect(() => {
-    setOrder(AppState.orders.find((item)=>item.id==id) as Order);
-   
-     return () => {
-       //close socket
-     }
-   }, [])
-   
-   function statusStyle() : string
-   {
-    return classNames(
-        {'order-active':order.is_active},
-        {'order-dead':!order.is_active},
+
+    const [orderSnapshot, loading, error] = useDocument(
+        doc(AppState.fireStore, 'orders',`${id}`),
+        {
+            snapshotListenOptions: { includeMetadataChanges: true },
+        }
     );
-   } 
-    return ( 
+
+   useEffect(() => {
+       if(orderSnapshot)
+        FirebaseConverters.orderConverter.fromFirestore(orderSnapshot).then((order)=> setOrder(order));   
+    
+   }, [orderSnapshot])
+   
+   //methods
+   
+   //UI
+   return ( 
         <div id="page">
             <Container>
             <Row>
@@ -44,12 +48,28 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
             </Row>
             <Row>
                 <Col>
-                <SummaryView order={order}></SummaryView>
+                {body()}
                 </Col>
             </Row>
         </Container>
         </div>
-     );
+    );
+    
+    function body()
+    {
+        if(loading || !(order.shop))
+            return (<h3 className="center w-100">Loading..</h3>);
+        return <SummaryView order={order}></SummaryView>
+    }
+
+   function statusStyle() : string
+   {
+        return classNames(
+            {'order-active':order?.is_active},
+            {'order-dead':!order?.is_active},
+        );
+   } 
+   
 }
  
 export default OrderDetailsScreen;
