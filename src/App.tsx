@@ -14,6 +14,8 @@ import CreateOrderScreen from 'createOrderScreen/createOrderScreen';
 import OrderDetailsScreen from 'orderDetailsScreen/orderDetailsScreen';
 import AppState from 'mocks/appState';
 import { User } from 'models/user';
+import ManageOrderView from 'manageOrderScreen/manageOrderScreen';
+import ManageOrderScreen from 'manageOrderScreen/manageOrderScreen';
 
 
 function App() {
@@ -64,7 +66,8 @@ function App() {
         <Route path="/orders" element={<CreateShop/>} />
         <Route path="/createOrder" element={<CreateOrderScreen/>} />
 
-        <Route path="/manageOrder/:id" element={<OrderDetailsScreen/>} />
+        <Route path="/viewOrder/:id" element={<OrderDetailsScreen/>} />
+        <Route path="/manageOrder/:id" element={<ManageOrderScreen/>} />
         
         <Route path="/" element={<Login onUserSet={setactiveUser}/>} />
       </Routes>

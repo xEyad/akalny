@@ -9,7 +9,7 @@ import SummaryView from "./summaryView/summaryView";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { doc, DocumentData, DocumentSnapshot, getDoc } from "firebase/firestore";
 import { FirebaseConverters } from "models/firebaseConverters";
-import ManageOrderView from "./userOrderView/manageOrderView";
+import ManageOrderView from "../manageOrderScreen/manageOrderScreen";
 
 
 interface OrderDetailsScreenProps {
@@ -32,7 +32,8 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
         FirebaseConverters.orderConverter.fromFirestore(orderSnapshot).then((order)=> setOrder(order));     
    }, [orderSnapshot])
    
-   const [viewMode, setViewMode] = useState<"summary"|"creation">("summary")
+   const [viewMode, setViewMode] = useState<"summary"|"creation">("summary"); //should be only me
+   const navigate = useNavigate();
    //methods
    
    //UI
@@ -63,7 +64,7 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
         if(viewMode=="creation")
             return <Button onClick={()=>setViewMode("summary")}>View order summary</Button>
         else if(viewMode=="summary")
-           return <Button onClick={()=>setViewMode("creation")}>Change your request</Button>
+           return <Button onClick={()=>navigate(`/manageOrder/${id}`)}>Change your request</Button>
     }
 
     function body()
@@ -74,7 +75,7 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
         if(viewMode=="summary")
             return (<SummaryView order={order}></SummaryView>)
         else if(viewMode=="creation")
-            return (<ManageOrderView></ManageOrderView>)
+            return (<ManageOrderView ></ManageOrderView>)
     }
 
    function statusStyle() : string

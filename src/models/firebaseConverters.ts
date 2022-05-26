@@ -56,14 +56,17 @@ export class FirebaseConverters
         {
             const firebaseData = orderSnapshot?.data() as DocumentData ;
             const order:Partial<Order> = {is_active:firebaseData['is_active']};
+            const shopDoc = doc(AppState.fireStore,firebaseData['shop']?.path);
             const results = await Promise.all(
                 [ 
-                    getDoc(doc(AppState.fireStore,firebaseData['shop']?.path)),
+                    getDoc(shopDoc),
                 ]
             )
             order.shop = results[0].data() as Shop;
+            order.shop.id = shopDoc.id;
             order.owner = firebaseData['owner'];
             order.requests = firebaseData['requests']
+            order.id = orderSnapshot.id;
             return order as Order;
         }
     };

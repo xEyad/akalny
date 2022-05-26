@@ -49,7 +49,7 @@ function CreateOrderScreen()
             shop: doc(AppState.fireStore,`shops/${shop?.id}`),
             requests:[]
         });
-        navigate(`/manageOrder/${docRef.id}`);
+        navigate(`/viewOrder/${docRef.id}`);
     }
 
     function instructions()
