@@ -16,11 +16,10 @@ class AppState {
 
     static firebaseApp:FirebaseApp; 
     static get fireStore(){return getFirestore(AppState.firebaseApp)};
-    static get activeUser():Readonly<User>{return AppState._activeUser};
-    private static _activeUser:User;
+    static get activeUser():Readonly<User>{return JSON.parse(localStorage.getItem('activeUser') as string) as User};
     static setActiveUser(user:User) : void
     {
-        AppState._activeUser = user
+        localStorage.setItem('activeUser',JSON.stringify(user));
     }
 }
 export default AppState;
