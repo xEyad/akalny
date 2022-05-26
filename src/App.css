@@ -12,3 +12,8 @@ a{
 a:hover{
   color: navajowhite !important;
 }
+
+.userName
+{
+  color: white;
+}

@@ -1,4 +1,4 @@
-import React, { useState,useEffect, useRef } from 'react';
+import React, { useState,useEffect, useRef, FunctionComponent } from 'react';
 import { Container } from 'react-bootstrap';
 import { Row,Col } from 'react-bootstrap';
 import './loginScreen.css';
@@ -12,7 +12,11 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import AppState from 'mocks/appState';
 import { User } from 'models/user';
   
-function Login() {
+interface LoginScreenProps {
+    onUserSet:{(user:User):any}
+}
+ 
+const Login: FunctionComponent<LoginScreenProps> = (props) => {
     //hooks
     const [creationName, setcreationName] = useState<string|undefined>(undefined);
     const [user, setUser] = useState<User|undefined>({'id':"defaulttto"});
@@ -54,6 +58,8 @@ function Login() {
     function onUserSelected(user:User)
     {
         setUser(user);
+        if(props?.onUserSet)
+            props.onUserSet(user);  
     }
 
     function changeCreationMode(mode:"create" | "select")
