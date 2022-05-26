@@ -64,7 +64,6 @@ export class FirebaseConverters
             order.shop = results[0].data() as Shop;
             order.owner = firebaseData['owner'];
             order.requests = firebaseData['requests']
-            console.log(order);                
             return order as Order;
         }
     };
