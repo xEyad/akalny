@@ -5,11 +5,14 @@ import "./orderDetailsScreen.css";
 import AppState from "mocks/appState";
 import { useNavigate, useParams } from "react-router-dom";
 import { Order } from "models/order";
-import SummaryView from "./summaryView/summaryView";
 import { useDocument } from "react-firebase-hooks/firestore";
-import { doc, DocumentData, DocumentSnapshot, getDoc } from "firebase/firestore";
+import { doc, DocumentData, DocumentSnapshot, getDoc, setDoc } from "firebase/firestore";
 import { FirebaseConverters } from "models/firebaseConverters";
 import ManageOrderView from "../manageOrderScreen/manageOrderScreen";
+import OrdersTable from "./summaryView/ordersTable";
+import PriceSummary from "./components/priceSummary";
+import { OrderRequest } from "models/orderRequest";
+const lodash = require('lodash');
 
 
 interface OrderDetailsScreenProps {
@@ -32,10 +35,20 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
         FirebaseConverters.orderConverter.fromFirestore(orderSnapshot).then((order)=> setOrder(order));     
    }, [orderSnapshot])
    
-   const [viewMode, setViewMode] = useState<"summary"|"creation">("summary"); //should be only me
    const navigate = useNavigate();
    //methods
    
+    function onChangeRequest() {
+        navigate(`/manageOrder/${id}`)
+    }
+
+    function onDeleteItem(req: OrderRequest,index:number) {
+        const orderRef = doc(AppState.fireStore, 'orders',`${id}`);
+        const newOrder = lodash.cloneDeep(order)
+        newOrder.requests.splice(index,1);
+        newOrder.shop = doc(AppState.fireStore,'shops',order.shop.id);      
+        setDoc(orderRef,newOrder)
+    }
    //UI
    return ( 
         <div id="page">
@@ -59,12 +72,10 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
         </div>
     );
     
+
     function toggleViewModeBtn()
     {
-        if(viewMode=="creation")
-            return <Button onClick={()=>setViewMode("summary")}>View order summary</Button>
-        else if(viewMode=="summary")
-           return <Button onClick={()=>navigate(`/manageOrder/${id}`)}>Change your request</Button>
+        return <Button onClick={onChangeRequest}>Change your request</Button>         
     }
 
     function body()
@@ -72,10 +83,12 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
         if(loading || !(order.shop))
             return (<h3 className="center w-100">Loading..</h3>);
 
-        if(viewMode=="summary")
-            return (<SummaryView order={order}></SummaryView>)
-        else if(viewMode=="creation")
-            return (<ManageOrderView ></ManageOrderView>)
+        return (
+            <>
+                <OrdersTable order={order} onDeleteItem={onDeleteItem} onEditItem={ onChangeRequest}></OrdersTable>
+                <PriceSummary order={order}></PriceSummary>
+            </>
+        )
     }
 
    function statusStyle() : string

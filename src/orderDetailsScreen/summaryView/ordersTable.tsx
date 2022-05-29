@@ -5,20 +5,21 @@ import { FunctionComponent } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
 
 interface OrdersTableProps {
-    order:Order
-    
+    order:Order,
+    onDeleteItem:(req:OrderRequest,index:number)=>void,
+    onEditItem:(req:OrderRequest,index:number)=>void,
 }
  
 const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
 
-    function rowAction(request:OrderRequest)
+    function rowAction(request:OrderRequest,index:number)
     {
         if(request.user?.id == AppState.activeUser?.id || AppState.activeUser?.id == props.order?.owner?.id)
         {
             return (<>
-                <Button variant="primary" onClick={()=>{}}>Edit</Button>
+                <Button variant="primary" onClick={()=>{props.onEditItem(request,index)}}>Edit</Button>
                 <div className="mx-1"></div>
-                <Button variant="danger" onClick={()=>{}}>Delete</Button>
+                <Button variant="danger" onClick={()=>{props.onDeleteItem(request,index)}}>Delete</Button>
             </>)
         }
         else
@@ -40,7 +41,7 @@ const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
                 <td>{request.item?.price}</td>
                 <td>{(new Date(request.date_modified as number)).toUTCString()}</td>
                 <td className="d-flex justify-content-center">
-                {rowAction(request)}
+                {rowAction(request,index)}
                 </td>
             </tr> 
             );
