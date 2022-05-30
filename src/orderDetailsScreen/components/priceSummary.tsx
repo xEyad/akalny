@@ -22,7 +22,6 @@ const PriceSummary: FunctionComponent<PriceSummaryProps> = (props) => {
 
     function calcVAT() 
     {
-        const order = props.order;
         const val = (1/props.order.shop.vatPercentage) * calcSubtotal();
         return val
     }
@@ -32,7 +31,7 @@ const PriceSummary: FunctionComponent<PriceSummaryProps> = (props) => {
     }
     //ui
     return ( <>
-            {row('subtotal',`${calcSubtotal()} EGP`)}
+            {row('Subtotal',`${calcSubtotal()} EGP`)}
             {row('VAT',`${calcVAT().toFixed(2)} EGP` )}
             {row('Delivery',`${props.order.shop.delivery} EGP` )}
             {row('Total',`${calcTotal()} EGP`  )}
