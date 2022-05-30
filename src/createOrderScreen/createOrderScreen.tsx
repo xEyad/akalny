@@ -3,7 +3,7 @@ import Shop from "models/shop";
 import { useState,useEffect } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { collection,doc, setDoc, addDoc, getDocs, DocumentReference, getDoc } from 'firebase/firestore';
+import { collection,doc, setDoc, addDoc, getDocs, DocumentReference, getDoc, deleteDoc } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import './createOrderScreen.css';
 function CreateOrderScreen() 
@@ -29,14 +29,11 @@ function CreateOrderScreen()
     
     function onDeleteShop(id:string)
     {
-        const idx = shops.findIndex((item)=>item.id==id);
-        
-        setShops(shops.filter((item)=>item.id!=id))
+        deleteDoc(doc(AppState.fireStore, 'shops',id)); 
     }
 
     function onEditShop(id:string)
     {
-        const idx = shops.findIndex((item)=>item.id==id);
     }
 
     async function onSelectShop(id:string)
