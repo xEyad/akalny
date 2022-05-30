@@ -185,8 +185,8 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
                 {requestItems}
                 <tr>
                     <td colSpan={2}>Total</td>
-                    <td>{curOrderRequest.map((v)=>v.quantity).reduce((prev,cur)=>cur+prev,0)} Items</td>
-                    <td>{curOrderRequest.map((v)=>v.item.price*v.quantity).reduce((prev,cur)=>cur+prev,0)} EGP</td>
+                    <td>{curOrderRequest.map((r)=>r.quantity).reduce((prev,cur)=>cur+prev,0)} Items</td>
+                    <td>{curOrderRequest.map((r)=>r.item.price*r.quantity).reduce((prev,cur)=>cur+prev,0)} EGP</td>
                     <td colSpan={2}></td>
                 </tr>
             </tbody>
