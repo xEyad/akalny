@@ -18,7 +18,7 @@ interface LoginScreenProps {
  
 const Login: FunctionComponent<LoginScreenProps> = (props) => {
     //hooks
-    const [creationName, setcreationName] = useState<string|undefined>(undefined);
+    const [creationName, setcreationName] = useState<string|undefined>("");
     const [user, setUser] = useState<User|undefined>({'id':"defaulttto"});
     const [creationMode, setCreationMode] = useState<"create"|"select">("select");
     const navigate = useNavigate();

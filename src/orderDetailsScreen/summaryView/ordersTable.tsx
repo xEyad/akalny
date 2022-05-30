@@ -13,18 +13,28 @@ interface OrdersTableProps {
 ///Should be renamed to something like: usersOrderRequestsTable
 const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
 
+    ///based on a condition, show jsxElement or elseJSXelement
+    function showIf(condition: boolean, jsxElement, elseJSXelement?) {
+        if (condition) return jsxElement;
+        else return elseJSXelement ? elseJSXelement : <></>;
+    }
+
     function rowAction(request:OrderRequest,index:number)
-    {
-        if(request.user?.id == AppState.activeUser?.id || AppState.activeUser?.id == props.order?.owner?.id)
-        {
-            return (<>
+    {   
+        return (<>
+            {showIf(
+                request.user?.id == AppState.activeUser?.id,
                 <Button variant="primary" onClick={()=>{props.onEditItem(request,index)}}>Edit</Button>
-                <div className="mx-1"></div>
+                )
+            }
+            <div className="mx-1"></div>
+            {
+               showIf(
+                AppState.activeUser?.id == props.order?.owner?.id,
                 <Button variant="danger" onClick={()=>{props.onDeleteItem(request,index)}}>Delete</Button>
-            </>)
-        }
-        else
-            return (<>-</>)
+                )    
+            }
+        </>)
     }
 
     function ordersTable()

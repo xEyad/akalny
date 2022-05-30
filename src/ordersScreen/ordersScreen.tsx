@@ -14,6 +14,7 @@ import { FirebaseConverters } from "models/firebaseConverters";
 import AppState from "mocks/appState";
 import { Order } from "models/order";
 import { useNavigate } from "react-router-dom";
+import './ordersScreen.css'
 const lodash = require("lodash");
 const classNames = require("classnames");
 
@@ -64,7 +65,6 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
     newOrder.is_active = !newOrder.is_active;
     newOrder.shop = doc(AppState.fireStore, "shops", newOrder.shop.id);
     setDoc(orderRef,newOrder)
-
   }
 
   function getOrderDate(order: Order): string {
@@ -85,7 +85,7 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
   }
 
   //ui
-  
+
   ///based on a condition, show jsxElement or elseJSXelement
   function showIf(condition: boolean, jsxElement, elseJSXelement?) {
     if (condition) return jsxElement;
@@ -100,7 +100,8 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
         <td>{item.shop.name}</td>
         <td className={statusStyle(item)}>{item.is_active ? "Active" : "In-active"} </td>
         <td>{getOrderDate(item)} </td>
-        <td className="d-flex justify-content-center">
+        <td >
+            <div className="d-flex justify-content-center">
             {
                 showIf(
                     item.is_active,
@@ -127,7 +128,9 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
               Delete
             </Button>
           )}
+
           <div className="mx-1"></div>
+          
           {showIf(
             AppState.activeUser.id == item.owner.id,
             <Button
@@ -139,6 +142,7 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
               Toggle status
             </Button>
           )}
+          </div>
         </td>
       </tr>
     ));

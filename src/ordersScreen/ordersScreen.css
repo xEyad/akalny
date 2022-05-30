@@ -9,9 +9,9 @@ td,tr{
 }
 
 .order-active{
-    color: green;
+    color: #198754 !important;
 }
 
 .order-dead{
-    color: red;
+    color: #dc3545 !important;
 }

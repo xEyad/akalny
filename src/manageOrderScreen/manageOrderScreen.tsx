@@ -45,7 +45,8 @@ const ManageOrderScreen: FunctionComponent<ManageOrderScreenProps> = () => {
   {
     const orderRef = doc(AppState.fireStore, "orders", `${id}`);
     const newOrder = lodash.cloneDeep(order);
-    newOrder.requests = newRequest;
+    const allUserRequestsExceptCurrent = order.requests.filter((req)=>req.user.id != AppState.activeUser.id);
+    newOrder.requests = [...allUserRequestsExceptCurrent,...newRequest];
     newOrder.shop = doc(AppState.fireStore, "shops", order.shop.id);
     await setDoc(orderRef, newOrder);
     navigate(`/viewOrder/${id}`);
@@ -54,13 +55,13 @@ const ManageOrderScreen: FunctionComponent<ManageOrderScreenProps> = () => {
   function getActiveUserRequests() {
     return order.requests.filter((r) => r.user.id == AppState.activeUser?.id);
   }
-
+  
+  
   function body() {
     if (order.owner && order.shop.id && !loading)
       return (
         <>
         <h1 className="text-center">Update your order</h1>
-                    
         <hr />
         <UserOrderTable
           onSubmitRequest={onSubmitRequest}

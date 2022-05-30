@@ -13,7 +13,7 @@ import {
 } from "react-router-dom";
 
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics } from "firebase/analytics"; //must import it
 import AppState from 'mocks/appState';
 
 //should be singlteon intialization
