@@ -1,0 +1,17 @@
+#page{
+    background-color: #1c1c1c;
+    color: white;
+    height: 100%;
+}
+td,tr{
+    vertical-align: middle;
+    text-align: center;
+}
+
+.order-active{
+    color: green;
+}
+
+.order-dead{
+    color: red;
+}

@@ -37,7 +37,7 @@ const Login: FunctionComponent<LoginScreenProps> = (props) => {
     }
     function onJoinOrder(){
         AppState.setActiveUser(user as User);
-        navigate('/joinOrder')
+        navigate('/orders')
     }
     function getUsers():User[] {
         const users = usersSnapshot?.docs.map((userDoc)=>{
