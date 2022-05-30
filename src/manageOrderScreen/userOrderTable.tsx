@@ -26,7 +26,6 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
     );
     useEffect(() => {
         setShop(shopSnapshot?.data() as Shop);
-        console.log('menu',shopSnapshot?.data()?.menu);
         
     }, [shopSnapshot])
     

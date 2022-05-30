@@ -39,9 +39,7 @@ const ManageOrderScreen: FunctionComponent<ManageOrderScreenProps> = () => {
         .then((order) => setOrder(order));
   }, [orderSnapshot]);
 
-  useEffect(() => {
-    console.log(order);
-  }, [order]);
+  
 
   async function onSubmitRequest(newRequest) 
   {
@@ -68,7 +66,7 @@ const ManageOrderScreen: FunctionComponent<ManageOrderScreenProps> = () => {
       );
     else return <>loading..</>;
   }
-  
+
   return (
     <>
       <div id="page">
