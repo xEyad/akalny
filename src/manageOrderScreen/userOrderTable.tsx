@@ -165,7 +165,7 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
                 } 
                 value={request.quantity||1} />
                </td>
-                <td>{request.item?.price}</td>
+                <td>{request.item?.price} EGP</td>
                 <td>{(new Date(request.date_modified as number)).toUTCString()}</td>                
                 <td><Button variant="danger" onClick={()=>deleteItem(index)}>Delete</Button></td>
             </tr> 
@@ -183,9 +183,16 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
             </thead>
             <tbody>
                 {requestItems}
+                <tr>
+                    <td colSpan={2}>Total</td>
+                    <td>{curOrderRequest.map((v)=>v.quantity).reduce((prev,cur)=>cur+prev,0)} Items</td>
+                    <td>{curOrderRequest.map((v)=>v.item.price*v.quantity).reduce((prev,cur)=>cur+prev,0)} EGP</td>
+                    <td colSpan={2}></td>
+                </tr>
             </tbody>
         </Table>
     }
+
 
     function submitBtn()
     {

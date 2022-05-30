@@ -53,29 +53,10 @@ const ManageOrderScreen: FunctionComponent<ManageOrderScreenProps> = () => {
     navigate(`/viewOrder/${id}`);
   }
 
-  ///create table
-  /*
-    get orders
-    filter by active user
-    enable user to add item from list and quantity
-    enable user to edit item price (pahse 2)
-    show prices and totals (optional)
-    */
   function getActiveUserRequests() {
     return order.requests.filter((r) => r.user.id == AppState.activeUser?.id);
   }
 
-  return (
-    <>
-      <div id="page">
-        <Container>
-          <Row>
-            <Col>{body()}</Col>
-          </Row>
-        </Container>
-      </div>
-    </>
-  );
   function body() {
     if (order.owner && order.shop.id && !loading)
       return (
@@ -87,6 +68,19 @@ const ManageOrderScreen: FunctionComponent<ManageOrderScreenProps> = () => {
       );
     else return <>loading..</>;
   }
+  
+  return (
+    <>
+      <div id="page">
+        <Container>
+          <Row >
+            <Col className="mt-4">{body()}</Col>
+          </Row>
+        </Container>
+      </div>
+    </>
+  );
+ 
 };
 
 export default ManageOrderScreen;
