@@ -4,8 +4,8 @@ import { FunctionComponent,useState,useReducer, useEffect,   } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
 import "./createShopScreen.css";
 import AppState from "mocks/appState";
-import { useNavigate } from "react-router-dom";
-import { collection,doc, setDoc, addDoc, getDocs } from 'firebase/firestore';
+import { useNavigate, useParams } from "react-router-dom";
+import { collection,doc, setDoc, addDoc, getDocs, getDoc } from 'firebase/firestore';
 
 interface CreateShopProps {
     
@@ -14,6 +14,9 @@ interface CreateShopProps {
 const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     
     //hooks
+    const { id } = useParams();
+    const [mode, setMode] = useState<"creation"|"edit">("creation");
+
     const [activeItem, setActiveItem] = useState<MenuItem>({name:"",price:0});
     let navigate = useNavigate();
     const initialState:Shop = {menu:[],vatPercentage:14,delivery:0,name:"", };
@@ -25,6 +28,15 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
         initialState
     );
 
+        useEffect(() => {
+            if(id)
+            {
+               getDoc(doc(AppState.fireStore,'shops',id)).then((doc)=>updateShop(doc.data() as Shop));
+            }
+            setMode(id?"edit":"creation");
+            
+        }, [id])
+        
     //methods
     function addMenuItem(item:MenuItem)
     {
@@ -50,7 +62,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     {
         return <>
         <Form.Label>Shop name</Form.Label>
-        <Form.Control type="text" placeholder="Shabrawy" onChange={(event)=>updateShop({name:event.target.value} as any)}/>
+        <Form.Control type="text" placeholder="Shabrawy" value={shop.name||""} onChange={(event)=>updateShop({name:event.target.value} as any)}/>
         </>
     }
 
@@ -58,7 +70,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     {
         return <>
         <Form.Label>VAT</Form.Label>
-        <Form.Control type="number" placeholder="14%" value={14} onChange={(event)=>updateShop({vatPercentage:Number(event.target.value)} as any)}/>
+        <Form.Control type="number" placeholder="14%" value={shop.vatPercentage||14} onChange={(event)=>updateShop({vatPercentage:Number(event.target.value)} as any)}/>
         </>
     }
 
@@ -66,7 +78,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     {
         return <>
         <Form.Label>Delivery</Form.Label>
-        <Form.Control type="number" placeholder="x EGP" onChange={(event)=>updateShop({delivery:Number(event.target.value)} as any)}/>
+        <Form.Control type="number" placeholder="x EGP" value={shop.delivery || ""} onChange={(event)=>updateShop({delivery:Number(event.target.value)} as any)}/>
         </>
     }
 
@@ -121,7 +133,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
             <Container className="">
                 <Row>
                     <Col>
-                        <h1 className="text-center">Create shop</h1>
+                        <h1 className="text-center">{mode=='creation'?'Create' : "Edit"} shop </h1>
                         <hr />
                     </Col>
                 </Row>
