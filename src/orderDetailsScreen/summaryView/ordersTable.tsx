@@ -9,7 +9,8 @@ interface OrdersTableProps {
     onDeleteItem:(req:OrderRequest,index:number)=>void,
     onEditItem:(req:OrderRequest,index:number)=>void,
 }
- 
+
+///Should be renamed to something like: usersOrderRequestsTable
 const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
 
     function rowAction(request:OrderRequest,index:number)

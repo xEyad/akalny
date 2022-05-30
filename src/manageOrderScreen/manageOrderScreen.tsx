@@ -58,11 +58,16 @@ const ManageOrderScreen: FunctionComponent<ManageOrderScreenProps> = () => {
   function body() {
     if (order.owner && order.shop.id && !loading)
       return (
+        <>
+        <h1 className="text-center">Update your order</h1>
+                    
+        <hr />
         <UserOrderTable
           onSubmitRequest={onSubmitRequest}
           requests={getActiveUserRequests()}
           shopId={order.shop.id as string}
         ></UserOrderTable>
+        </>
       );
     else return <>loading..</>;
   }

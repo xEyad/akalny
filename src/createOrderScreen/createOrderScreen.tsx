@@ -109,7 +109,7 @@ function CreateOrderScreen()
     <div id="page">
         <Container>
             <Row>
-                <Col>
+                <Col className="mt-4">
                     <h1 className="text-center">Create order</h1>
                     <hr />
                 </Col>
