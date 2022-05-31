@@ -1,5 +1,5 @@
 import Login from 'loginScreen/loginScreen';
-import React, { useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -65,12 +65,11 @@ function App() {
         <Route path="/createShop" element={<CreateShop/>} />
         <Route path="/editShop/:id" element={<CreateShop/>} />
         <Route path="/shops" element={<ShopsScreen/>} />
-
-        <Route path="/orders" element={<OrdersScreen/>} />
-        <Route path="/createOrder" element={<CreateOrderScreen/>} />
-
-        <Route path="/viewOrder/:id" element={<OrderDetailsScreen/>} />
-        <Route path="/manageOrder/:id" element={<ManageOrderScreen/>} />
+        <Route path="/orders" element={<AuthGuard element={<OrdersScreen/>}/>   } />
+        <Route path="/createOrder" element={<AuthGuard element={<CreateOrderScreen/>} />} />
+        
+        <Route path="/viewOrder/:id" element={<AuthGuard element={<OrderDetailsScreen/>} />} />
+        <Route path="/manageOrder/:id" element={<AuthGuard element={<ManageOrderScreen/>} />} />
 
         
         <Route path="/" element={<Login onUserSet={setactiveUser}/>} />
@@ -80,3 +79,25 @@ function App() {
 }
 
 export default App;
+
+///render component if user is authenticated otherwise, redirect to login
+
+interface authGuardProps {
+  element: JSX.Element
+}
+ 
+const AuthGuard: FunctionComponent<authGuardProps> = (props) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if(!AppState.activeUser)
+      navigate('/login')
+  
+  }, )
+  
+  function body()
+  {
+    return AppState.activeUser?props.element:<></>;
+  }
+  return ( body());
+}
+ 
