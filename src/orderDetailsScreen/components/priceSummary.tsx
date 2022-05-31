@@ -1,15 +1,44 @@
+import { orderBy } from "firebase/firestore";
 import { Order } from "models/order";
 import { FunctionComponent } from "react";
+const lodash = require('lodash');
 
 interface PriceSummaryProps {
     order:Order
+    filterByUserId?:string|"All"
     
 }
  
 const PriceSummary: FunctionComponent<PriceSummaryProps> = (props) => {
+    const order = getOrder();
+    const isFiltered = props.filterByUserId && props.filterByUserId!="All";
+    
+    function getDelivery() : number
+    {
+        if(isFiltered)
+        {
+            const users = Array.from(new Set(props.order.requests.map((req)=>(req.user))));
+            return order.shop.delivery / users.length;
+        }
+        else 
+            return order.shop.delivery;
+    }
+
+    function getOrder() : Order
+    {
+        if(!props.filterByUserId || props.filterByUserId=="All")
+            return props.order;
+        else
+        {
+            const newReqs = props.order.requests.filter((req)=>req.user.id == props.filterByUserId)
+            const order = lodash.cloneDeep(props.order);
+            order.requests = newReqs;
+            return order;
+        }
+    }
+
     function calcSubtotal() 
     {
-        const order = props.order;
         if(!order.requests)
             return 0;
         let subtotal = 0;
@@ -22,18 +51,18 @@ const PriceSummary: FunctionComponent<PriceSummaryProps> = (props) => {
 
     function calcVAT() 
     {
-        const val = (1/props.order.shop.vatPercentage) * calcSubtotal();
+        const val = (1/order.shop.vatPercentage) * calcSubtotal();
         return val
     }
 
     function calcTotal() {
-        return (calcVAT() + calcSubtotal() + props.order.shop.delivery).toFixed(2);
+        return (calcVAT() + calcSubtotal() + getDelivery()).toFixed(2);
     }
     //ui
     return ( <>
-            {row('Subtotal',`${calcSubtotal()} EGP`)}
+            {row('Subtotal',`${calcSubtotal().toFixed(2)} EGP`)}
             {row('VAT',`${calcVAT().toFixed(2)} EGP` )}
-            {row('Delivery',`${props.order.shop.delivery} EGP` )}
+            {row('Delivery',`${getDelivery().toFixed(2)} EGP` )}
             {row('Total',`${calcTotal()} EGP`  )}
     </> );
 

@@ -154,6 +154,37 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
     );
   }
 
+  const [curFilteredUser, setCurFilter] = useState<string>('All');
+
+
+  function filters() {
+
+    const users = Array.from(new Set(order.requests.map((req)=>(req.user))));
+    
+    const options = users.map(                
+        (user)=>(<option key={user.id} value={user.id}>{user.name}</option>)
+    )
+    
+    return(
+      <>
+      <Form.Label>
+        Filter by user 
+      </Form.Label>
+      <Form.Select 
+      value={curFilteredUser}
+      onChange={    
+          (ev)=>{
+            setCurFilter(ev.currentTarget.value)
+          } 
+      }
+      >
+        <option value={'All'}>All</option>
+        {options}
+      </Form.Select>
+      </>
+    )
+  }
+
   function body() {
     if (loading || !order.shop)
       return <h3 className="center w-100">Loading..</h3>;
@@ -170,14 +201,22 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
                 <hr />
               </Col>
             </Row>
+            
+            <Row className="mb-4">
+              <Col>
+              {filters()}
+              </Col>
+            </Row>
+
             <Row>
               <Col>
                 <OrdersTable
                   order={order}
                   onDeleteItem={onDeleteItem}
                   onEditItem={onChangeRequest}
+                  filterByUserId={curFilteredUser}
                 ></OrdersTable>
-                <PriceSummary order={order}></PriceSummary>
+                <PriceSummary order={order} filterByUserId={curFilteredUser}></PriceSummary>
               </Col>
             </Row>
           </Container>

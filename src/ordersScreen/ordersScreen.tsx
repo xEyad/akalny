@@ -99,6 +99,7 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
         <td>{item.owner.name}</td>
         <td>{item.shop.name}</td>
         <td className={statusStyle(item)}>{item.is_active ? "Active" : "In-active"} </td>
+        <td>{Array.from(new Set(item.requests.map((req)=>(req.user)))).length} user(s)</td>
         <td>{getOrderDate(item)} </td>
         <td >
             <div className="d-flex justify-content-center">
@@ -155,6 +156,7 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
             <th>Creator</th>
             <th>Shop</th>
             <th>Status</th>
+            <th>Contributors</th>
             <th>Creation date</th>
             <th>Actions</th>
           </tr>

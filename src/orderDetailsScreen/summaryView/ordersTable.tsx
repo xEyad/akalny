@@ -8,6 +8,7 @@ interface OrdersTableProps {
     order:Order,
     onDeleteItem:(req:OrderRequest,index:number)=>void,
     onEditItem:(req:OrderRequest,index:number)=>void,
+    filterByUserId?:string|"All"
 }
 
 ///Should be renamed to something like: usersOrderRequestsTable
@@ -36,13 +37,21 @@ const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
             }
         </>)
     }
+    
+    function filterRequestsByUsers() :  OrderRequest[]
+    {
+        if(!props.filterByUserId || props.filterByUserId=='All')
+            return props.order.requests;
+        else
+            return props.order.requests.filter((req)=>req.user.id == props.filterByUserId)
+    }
 
     function ordersTable()
     {
         if(props.order.requests?.length ==0)
             return (<h3 className="text-center">No orders yet</h3>)
 
-        const shopRows = props.order.requests?.map(
+        const shopRows = filterRequestsByUsers().map(
             (request,index) =>    
             <tr key={index+1}>
                 <td>{index+1}</td>

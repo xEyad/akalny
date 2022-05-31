@@ -165,7 +165,7 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
 
     function requestTable()
     {
-        const requestItems = curOrderRequest?.map(
+        const requestItems = curOrderRequest?.sort((a,b)=>a.user.name.localeCompare(b.user.name)).map(
             (request,index) =>    
             <tr key={index+1}>
                 <td>{index+1}</td>
