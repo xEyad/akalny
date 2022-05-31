@@ -28,14 +28,14 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
         initialState
     );
 
-        useEffect(() => {
-            if(id)
-            {
-               getDoc(doc(AppState.fireStore,'shops',id)).then((doc)=>updateShop(doc.data() as Shop));
-            }
-            setMode(id?"edit":"creation");
-            
-        }, [id])
+    useEffect(() => {
+        if(id)
+        {
+            getDoc(doc(AppState.fireStore,'shops',id)).then((doc)=>updateShop(doc.data() as Shop));
+        }
+        setMode(id?"edit":"creation");
+        
+    }, [id])
         
     //methods
     function addMenuItem(item:MenuItem)
@@ -51,9 +51,12 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
         updateShop({} as any);
     }
 
-    async function onCreateShop()
+    async function onSubmitShop()
     {        
-        const docRef = await addDoc(collection(AppState.fireStore,'shops'),JSON.parse(JSON.stringify(shop)));
+        if(mode=="creation")
+            await addDoc(collection(AppState.fireStore,'shops'),JSON.parse(JSON.stringify(shop)));
+        else if(mode=="edit")
+            await setDoc(doc(AppState.fireStore,'shops',id),JSON.parse(JSON.stringify(shop)));
         navigate(-1);
     }
 
@@ -150,7 +153,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
                 </Row>
                 <Row>
                     <Col className="text-center">
-                    <Button onClick={onCreateShop}>Create shop</Button>
+                    <Button onClick={onSubmitShop}>{mode=='creation'?'Create' : "Update"} shop</Button>
                     </Col> 
                 </Row>
             </Container>

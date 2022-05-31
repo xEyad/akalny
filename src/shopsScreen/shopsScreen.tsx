@@ -33,6 +33,7 @@ function ShopsScreen() {
 
     function onEditShop(id:string)
     {
+        navigate(`/editShop/${id}`);
     }
 
 
@@ -53,7 +54,7 @@ function ShopsScreen() {
                 <td>{item.vatPercentage} %</td>
                 <td>{item.menu?.length||-1+1} </td>
                 <td className="d-flex justify-content-center">
-                    <Button variant="primary" onClick={()=>{}}>Edit</Button>
+                    <Button variant="primary" onClick={()=>{onEditShop(item.id as string)}}>Edit</Button>
                     <div className="mx-1"></div>
                     <Button variant="danger" onClick={()=>{onDeleteShop(item.id as string)}}>Delete</Button>
                 </td>

@@ -24,13 +24,19 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
             snapshotListenOptions: { includeMetadataChanges: true },
         }
     );
-    useEffect(() => {
-        setShop(shopSnapshot?.data() as Shop);
+    useEffect(() => {      
+        const firebaseShop = shopSnapshot?.data() as Shop;
+        if(firebaseShop)
+        {
+            firebaseShop.id = props.shopId;
+            setShop(firebaseShop);
+        }
         
     }, [shopSnapshot])
     
     const [curOrderRequest, setcurReq] = useState(props.requests);
     const [newItemRequest, setNewRequest] = useState<OrderRequest|undefined>();
+    const navigate = useNavigate();
 
     ///methods
     const handleOnSelect = (item:MenuItem) => {
@@ -93,7 +99,10 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
         setcurReq([...curOrderRequest])
     }
 
-    
+    function onEditShop(id:string)
+    {
+        navigate(`/editShop/${id}`);
+    }
 
     //UI
       
@@ -140,12 +149,19 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
             </td>
             
         </tr>
+        <tr>
+            <td colSpan={4}>
+            <div className="d-flex justify-content-between align-items-center">
+                <span>Can't find an item within this shop? - add it to the shop then come back here and select it</span>
+                <Button variant="primary" onClick={()=>{onEditShop(shop.id as string)}}>Edit Shop</Button>
+                <div></div>
+            </div>
+            </td>
+        </tr>
         </tbody>
         </Table>
         
     }
-
-    
 
     function requestTable()
     {
@@ -191,7 +207,6 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
             </tbody>
         </Table>
     }
-
 
     function submitBtn()
     {

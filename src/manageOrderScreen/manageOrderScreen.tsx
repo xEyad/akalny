@@ -55,8 +55,7 @@ const ManageOrderScreen: FunctionComponent<ManageOrderScreenProps> = () => {
   function getActiveUserRequests() {
     return order.requests.filter((r) => r.user.id == AppState.activeUser?.id);
   }
-  
-  
+    
   function body() {
     if (order.owner && order.shop.id && !loading)
       return (

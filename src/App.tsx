@@ -20,8 +20,9 @@ import ManageOrderScreen from 'manageOrderScreen/manageOrderScreen';
 
 
 function App() {
-  const [activeUser, setactiveUser] = useState<User | undefined>();
+  const [activeUser, setactiveUser] = useState<User | undefined>(AppState.activeUser);
   const navigate = useNavigate();
+
   function navbar()
   {
     return <Navbar bg="dark" variant="dark" expand="lg" >
@@ -62,6 +63,7 @@ function App() {
         <Route path="/home" element={<Login onUserSet={setactiveUser}/>} />
 
         <Route path="/createShop" element={<CreateShop/>} />
+        <Route path="/editShop/:id" element={<CreateShop/>} />
         <Route path="/shops" element={<ShopsScreen/>} />
 
         <Route path="/orders" element={<OrdersScreen/>} />

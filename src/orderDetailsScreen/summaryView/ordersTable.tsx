@@ -51,8 +51,10 @@ const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
                 <td>{request.quantity}</td>
                 <td>{request.item?.price}</td>
                 <td>{(new Date(request.date_modified as number)).toUTCString()}</td>
-                <td className="d-flex justify-content-center">
-                {rowAction(request,index)}
+                <td >
+                    <div className="d-flex justify-content-center">
+                        {rowAction(request,index)}
+                    </div>
                 </td>
             </tr> 
             );
