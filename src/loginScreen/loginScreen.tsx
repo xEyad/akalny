@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import {
     useNavigate 
   } from "react-router-dom";
-import { collection,doc, setDoc, addDoc, getDocs } from 'firebase/firestore';
+import { collection,doc, setDoc, addDoc, getDocs, query, orderBy } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import AppState from 'mocks/appState';
 import { User } from 'models/user';
@@ -23,7 +23,7 @@ const Login: FunctionComponent<LoginScreenProps> = (props) => {
     const [creationMode, setCreationMode] = useState<"create"|"select">("select");
     const navigate = useNavigate();
     let [usersSnapshot, loadingCollection, error] = useCollection(
-        collection(AppState.fireStore, 'users'),
+        query(collection(AppState.fireStore, 'users'),orderBy('name')),
         {
             snapshotListenOptions: { includeMetadataChanges: true },
         }
@@ -70,16 +70,17 @@ const Login: FunctionComponent<LoginScreenProps> = (props) => {
 
     async function onCreateUser(name:string) 
     {
-        const docRef = await addDoc(collection(AppState.fireStore,'users'),{'name':name});
+        const docRef = await addDoc(collection(AppState.fireStore,'users'),{'name':name});        
         changeCreationMode("select");
         usersSnapshot = (await getDocs(collection(AppState.fireStore,'users'))); //TODO: not best practice, but it works   
-        setUser(getUsers().find((user)=>user.id == docRef.id)) 
+        const newUser = getUsers().find((user)=>user.id == docRef.id);
+        setUser(newUser)
+        if(props?.onUserSet)
+            props.onUserSet(newUser);          
         setcreationName(undefined);
     }
 
-    //UI    
-
-    
+    //UI        
     return <div className='login'>
         <Container className='h-100 d-flex justify-content-center align-content-center'>
             <Row className=''>

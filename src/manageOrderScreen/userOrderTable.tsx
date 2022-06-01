@@ -181,7 +181,7 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
                 value={request.quantity||1} />
                </td>
                 <td>{request.item?.price} EGP</td>
-                <td>{(new Date(request.date_modified as number)).toUTCString()}</td>                
+                <td>{(new Date(request.date_modified as number)).toLocaleString()}</td>                
                 <td><Button variant="danger" onClick={()=>deleteItem(index)}>Delete</Button></td>
             </tr> 
             );

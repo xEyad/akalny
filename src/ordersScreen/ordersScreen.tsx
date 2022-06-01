@@ -8,6 +8,9 @@ import {
   DocumentData,
   DocumentSnapshot,
   getDoc,
+  limit,
+  orderBy,
+  query,
   setDoc,
 } from "firebase/firestore";
 import { FirebaseConverters } from "models/firebaseConverters";
@@ -15,6 +18,7 @@ import AppState from "mocks/appState";
 import { Order } from "models/order";
 import { useNavigate } from "react-router-dom";
 import './ordersScreen.css'
+import Utility from "models/utility";
 const lodash = require("lodash");
 const classNames = require("classnames");
 
@@ -25,7 +29,7 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
   const navigate = useNavigate();
   let [orders, setOrders] = useState<Order[]>([]);
   const [ordersSnapshot, loading, error] = useCollection(
-    collection(AppState.fireStore, "orders"),
+    query(collection(AppState.fireStore, "orders"),orderBy('creation_date',"desc"),limit(10)),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
     }
@@ -34,13 +38,13 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
   useEffect(() => {
     if (ordersSnapshot) {
       const ordersPromises: Promise<Order>[] = ordersSnapshot.docs.map(
-        async (orderDoc) => {
-          return await FirebaseConverters.orderConverter.fromFirestore(
+        (orderDoc) => {
+          return FirebaseConverters.orderConverter.fromFirestore(
             orderDoc
           );
         }
       );
-      Promise.all(ordersPromises).then((orders) => setOrders(orders.sort((a,b)=>a.owner.name.localeCompare(b.owner.name))));
+      Promise.all(ordersPromises).then((orders) => setOrders(orders));
     }
   }, [ordersSnapshot]);
 
@@ -68,13 +72,7 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
   }
 
   function getOrderDate(order: Order): string {
-    ///get date of oldest request
-    if (order.requests.length == 0) return "-";
-    let oldestDate = Number.MAX_VALUE;
-    for (const req of order.requests) {
-      oldestDate = Math.min(oldestDate, req.date_modified);
-    }
-    return new Date(oldestDate).toUTCString();
+    return new Date(order.creation_date).toLocaleString();
   }
 
   function statusStyle(order: Order): string {
@@ -99,22 +97,19 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
         <td>{item.owner.name}</td>
         <td>{item.shop.name}</td>
         <td className={statusStyle(item)}>{item.is_active ? "Active" : "In-active"} </td>
-        <td>{Array.from(new Set(item.requests.map((req)=>(req.user)))).length} user(s)</td>
+        <td>{Utility.getUniqueUsers(item.requests).length} user(s)</td>
         <td>{getOrderDate(item)} </td>
         <td >
             <div className="d-flex justify-content-center">
             {
-                showIf(
-                    item.is_active,
-                    <Button
-                        variant="success"
-                        onClick={() => {
-                        joinOrder(item.id as string);
-                        }}
-                    >
-                        Join
-                    </Button>
-                    )
+               <Button
+               variant="success"
+               onClick={() => {
+               joinOrder(item.id as string);
+               }}
+                >
+                    {item.is_active? 'Join' : "View"}
+                </Button>
             }
           
           <div className="mx-1"></div>
@@ -143,6 +138,7 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
               Toggle status
             </Button>
           )}
+
           </div>
         </td>
       </tr>

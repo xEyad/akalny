@@ -73,7 +73,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     {
         return <>
         <Form.Label>VAT</Form.Label>
-        <Form.Control type="number" placeholder="14%" value={shop.vatPercentage||14} onChange={(event)=>updateShop({vatPercentage:Number(event.target.value)} as any)}/>
+        <Form.Control type="number" placeholder="14%" value={shop.vatPercentage} onChange={(event)=>updateShop({vatPercentage:Number(event.target.value)} as any)}/>
         </>
     }
 
@@ -81,7 +81,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     {
         return <>
         <Form.Label>Delivery</Form.Label>
-        <Form.Control type="number" placeholder="x EGP" value={shop.delivery || ""} onChange={(event)=>updateShop({delivery:Number(event.target.value)} as any)}/>
+        <Form.Control type="number" placeholder="x EGP" value={shop.delivery || 0} onChange={(event)=>updateShop({delivery:Number(event.target.value)} as any)}/>
         </>
     }
 

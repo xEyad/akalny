@@ -8,6 +8,7 @@ export interface Order {
     shop:     Shop;
     is_active: boolean;
     requests: OrderRequest[];
+    creation_date:number;
 }
 
 

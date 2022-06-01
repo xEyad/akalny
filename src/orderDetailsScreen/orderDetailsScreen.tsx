@@ -18,6 +18,8 @@ import ManageOrderView from "../manageOrderScreen/manageOrderScreen";
 import OrdersTable from "./summaryView/ordersTable";
 import PriceSummary from "./components/priceSummary";
 import { OrderRequest } from "models/orderRequest";
+import RequestsByUsers from "manageOrderScreen/requestsByUser";
+import Utility from "models/utility";
 const lodash = require("lodash");
 
 interface OrderDetailsScreenProps {}
@@ -42,6 +44,9 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
   }, [orderSnapshot]);
 
   const navigate = useNavigate();
+  const [curFilteredUser, setCurFilter] = useState<string>('All');
+  const [curView, setCurView] = useState<"all"|"byUser">("all");
+
   //methods
 
   function onChangeRequest() {
@@ -107,7 +112,21 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
   }
 
   function changeRequestBtn() {
-    return <Button onClick={onChangeRequest}>Change your request</Button>;
+    if(!order.is_active)
+      return <></>
+    let label ='Add items to order';
+    if(order.requests.find((req)=>req.user.id == AppState.activeUser.id))
+      label =  'Update/change your order';
+    return <Button onClick={onChangeRequest}>{label}</Button>;
+  }
+
+  function toggleViewBtn()
+  {
+    if(curView == "all")
+      return <Button onClick={()=>setCurView("byUser")}>Switch orders view</Button>;
+    else
+      return <Button onClick={()=>setCurView('all')}>Switch orders view</Button>;
+
   }
 
   function orderMetaDetails() {
@@ -145,6 +164,8 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
                   {toggleOrderStatusBtn()}
                   <div className="me-2"></div>
                   {deleteOrderBtn()}
+                  <div className="me-2"></div>
+                  {toggleViewBtn()}
                 </div>
               </td>
             </tr>
@@ -154,12 +175,11 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
     );
   }
 
-  const [curFilteredUser, setCurFilter] = useState<string>('All');
 
 
   function filters() {
 
-    const users = Array.from(new Set(order.requests.map((req)=>(req.user))));
+    const users = Utility.getUniqueUsers(order.requests);
     
     const options = users.map(                
         (user)=>(<option key={user.id} value={user.id}>{user.name}</option>)
@@ -185,6 +205,31 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
     )
   }
 
+  function view()
+  {
+    if(curView == "all")
+    {
+      return(<>
+      <div className="mb-4">
+      {filters()}
+
+      </div>
+       <OrdersTable
+          order={order}
+          onDeleteItem={onDeleteItem}
+          onEditItem={onChangeRequest}
+          filterByUserId={curFilteredUser}
+        ></OrdersTable>
+        <PriceSummary order={order} filterByUserId={curFilteredUser}></PriceSummary>
+      </>);
+    }
+    else 
+    {
+      return <RequestsByUsers order={order}></RequestsByUsers>
+      
+    }
+  }
+
   function body() {
     if (loading || !order.shop)
       return <h3 className="center w-100">Loading..</h3>;
@@ -202,21 +247,14 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
               </Col>
             </Row>
             
-            <Row className="mb-4">
+            <Row >
               <Col>
-              {filters()}
               </Col>
             </Row>
 
             <Row>
               <Col>
-                <OrdersTable
-                  order={order}
-                  onDeleteItem={onDeleteItem}
-                  onEditItem={onChangeRequest}
-                  filterByUserId={curFilteredUser}
-                ></OrdersTable>
-                <PriceSummary order={order} filterByUserId={curFilteredUser}></PriceSummary>
+                  {view()}  
               </Col>
             </Row>
           </Container>

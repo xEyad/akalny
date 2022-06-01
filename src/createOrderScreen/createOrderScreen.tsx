@@ -44,7 +44,8 @@ function CreateOrderScreen()
             is_active:true,
             owner:AppState.activeUser,
             shop: doc(AppState.fireStore,`shops/${shop?.id}`),
-            requests:[]
+            requests:[],
+            creation_date: Date.now()
         });
         navigate(`/viewOrder/${docRef.id}`);
     }

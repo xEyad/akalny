@@ -67,6 +67,7 @@ export class FirebaseConverters
             order.owner = firebaseData['owner'];
             order.requests = firebaseData['requests']
             order.id = orderSnapshot.id;
+            order.creation_date = firebaseData['creation_date'];
             return order as Order;
         }
     };

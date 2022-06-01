@@ -18,7 +18,7 @@ const PriceSummary: FunctionComponent<PriceSummaryProps> = (props) => {
         if(isFiltered)
         {
             const users = Array.from(new Set(props.order.requests.map((req)=>(req.user))));
-            return order.shop.delivery / users.length;
+            return order.shop.delivery / (users.length-1);
         }
         else 
             return order.shop.delivery;
@@ -51,7 +51,9 @@ const PriceSummary: FunctionComponent<PriceSummaryProps> = (props) => {
 
     function calcVAT() 
     {
-        const val = (1/order.shop.vatPercentage) * calcSubtotal();
+        if(order.shop.vatPercentage==0)
+            return 0;
+        const val = (order.shop.vatPercentage/100) * calcSubtotal();
         return val
     }
 
