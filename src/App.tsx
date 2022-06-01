@@ -9,7 +9,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import CreateShop from 'createShopScreen/createShopScreen';
-import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Container, ModalFooter, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import ShopsScreen from 'shopsScreen/shopsScreen';
 import CreateOrderScreen from 'createOrderScreen/createOrderScreen';
 import OrderDetailsScreen from 'orderDetailsScreen/orderDetailsScreen';
@@ -32,7 +32,7 @@ function App() {
         style={{ maxHeight: '100px' }}
         navbarScroll
       >
-        <Navbar.Brand onClick={()=>navigate('/home')} >عايز أكُل</Navbar.Brand>
+        <Navbar.Brand onClick={()=>navigate('/home')} className="clickable" >عايز أكُل</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
@@ -50,9 +50,16 @@ function App() {
           </Nav>
         </Navbar.Collapse>
         </Nav>
-        <span className='userName'>{activeUser?.name}</span>
+         <span className='userName'>Active user: {activeUser?.name || '-'}</span>
       </Container>
     </Navbar>
+  }
+
+  function footer()
+  {
+    return <div className='footer'>
+      ألف هنا يا زميلي
+    </div>
   }
 
   return (
@@ -75,6 +82,7 @@ function App() {
         
         <Route path="/" element={<Login onUserSet={setactiveUser}/>} />
       </Routes>
+      {footer()}
     </>
   );
 }
