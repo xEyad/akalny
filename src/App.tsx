@@ -32,7 +32,7 @@ function App() {
         style={{ maxHeight: '100px' }}
         navbarScroll
       >
-        <Navbar.Brand href="#home">عايز أكُل</Navbar.Brand>
+        <Navbar.Brand onClick={()=>navigate('/home')} >عايز أكُل</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
@@ -61,6 +61,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login onUserSet={setactiveUser}/>} />
         <Route path="/home" element={<Login onUserSet={setactiveUser}/>} />
+        <Route path="/akalny" element={<Login onUserSet={setactiveUser}/>} />
 
         <Route path="/createShop" element={<CreateShop/>} />
         <Route path="/editShop/:id" element={<CreateShop/>} />
