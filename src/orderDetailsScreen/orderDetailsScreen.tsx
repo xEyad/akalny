@@ -236,7 +236,7 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
 
     return (
       <>
-        <div id="page">
+        <div id="page" className="overflow-auto">
           <Container>
             <Row>
               <Col>

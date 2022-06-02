@@ -37,3 +37,10 @@ a:hover{
   align-items: center;
   justify-content: center;
 }
+
+#page{
+  background-color: #1c1c1c;
+  color: white;
+  height: calc( 100vh - 106px ) !important; 
+  overflow: auto;
+}
