@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/akalny/static/css/main.5c09b974.css",
-    "main.js": "/akalny/static/js/main.5e203fc3.js",
+    "main.css": "/akalny/static/css/main.97effdc8.css",
+    "main.js": "/akalny/static/js/main.1fe68599.js",
     "static/js/787.aca83e3f.chunk.js": "/akalny/static/js/787.aca83e3f.chunk.js",
     "index.html": "/akalny/index.html",
-    "main.5c09b974.css.map": "/akalny/static/css/main.5c09b974.css.map",
-    "main.5e203fc3.js.map": "/akalny/static/js/main.5e203fc3.js.map",
+    "main.97effdc8.css.map": "/akalny/static/css/main.97effdc8.css.map",
+    "main.1fe68599.js.map": "/akalny/static/js/main.1fe68599.js.map",
     "787.aca83e3f.chunk.js.map": "/akalny/static/js/787.aca83e3f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5c09b974.css",
-    "static/js/main.5e203fc3.js"
+    "static/css/main.97effdc8.css",
+    "static/js/main.1fe68599.js"
   ]
 }
