@@ -1,17 +1,27 @@
-#page{
-    background-color: #1c1c1c;
-    color: white;
-    height: 100%;
+#page {
+	background-color: #1c1c1c;
+	color: white;
+	height: 100%;
 }
-td,tr{
-    vertical-align: middle;
-    text-align: center;
-}
-
-.order-active{
-    color: green;
+td,
+tr {
+	vertical-align: middle;
+	text-align: center;
 }
 
-.order-dead{
-    color: red;
+.order-active {
+	color: green;
+}
+
+.order-dead {
+	color: red;
+}
+
+.MuiInputBase-input.MuiInputBase-inputAdornedEnd.MuiAutocomplete-input.MuiAutocomplete-inputFocused.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+	color: white !important;
+}
+
+.MuiTextField-root,
+.MuiAutocomplete-input {
+	color: white !important;
 }
