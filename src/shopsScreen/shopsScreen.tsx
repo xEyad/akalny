@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { collection,doc, setDoc, addDoc, getDocs, DocumentReference, getDoc, deleteDoc } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import './shopsScreen.css';
+import PasswordConfirmationPopup from "passwordConfirmation/passwordConfirmationPopup";
 
 function ShopsScreen() {
     let [shopsSnapshot, loadingCollection, error] = useCollection(
@@ -25,17 +26,38 @@ function ShopsScreen() {
     
     const [shops, setShops] = useState<Shop[]>([]);
     const navigate = useNavigate();
+    let [shopToDeleteId, setShopToDeleteId] = useState<string>()
+    const [deleteModalTitle, setdeleteModalTitle] = useState<string>();
+    const [showModal, setShowModal] = useState(false);
 
-    function onDeleteShop(id:string)
+    function onDeleteModalSubmit(isPdCorrect:boolean)
     {
-        deleteDoc(doc(AppState.fireStore, 'shops',id));  
+        if(isPdCorrect)
+        {
+            deleteDoc(doc(AppState.fireStore, 'shops',shopToDeleteId));  
+            setShowModal(false)
+        }
+        
+    }
+    
+
+    function onDeleteShop(shop:Shop)
+    {
+        setShowModal(true);
+        setdeleteModalTitle(`Delete shop "${shop.name}"`)
+        setShopToDeleteId(shop.id);
+    }
+
+    function onDismissDeleteModal()
+    {
+        setShopToDeleteId(undefined);
+        setShowModal(false);
     }
 
     function onEditShop(id:string)
     {
         navigate(`/editShop/${id}`);
     }
-
 
     function shopsTable()
     {
@@ -56,7 +78,7 @@ function ShopsScreen() {
                 <td className="d-flex justify-content-center">
                     <Button variant="primary" onClick={()=>{onEditShop(item.id as string)}}>Edit</Button>
                     <div className="mx-1"></div>
-                    <Button variant="danger" onClick={()=>{onDeleteShop(item.id as string)}}>Delete</Button>
+                    <Button variant="danger" onClick={()=>{onDeleteShop(item)}}>Delete</Button>
                 </td>
             </tr> 
             );
@@ -76,7 +98,6 @@ function ShopsScreen() {
             </tbody>
         </Table>
     }
-
     function body()
     {
         return ( 
@@ -98,6 +119,7 @@ function ShopsScreen() {
                         </Col>
                     </Row>
                 </Container>
+                <PasswordConfirmationPopup title={deleteModalTitle} onSubmit={onDeleteModalSubmit} show={showModal} onClose={onDismissDeleteModal} onHide={onDismissDeleteModal}/>
             </div>
             </> 
             );
