@@ -42,11 +42,6 @@ const PasswordConfirmationPopup: FunctionComponent<PasswordConfirmationPopupProp
       props.onClose();
     }
 
-    // function title() :string
-    // {
-      
-    // }
-
     return ( <>
     <Modal show={props.show} onHide={onHide} variant="dark">
         <Modal.Header closeButton>
