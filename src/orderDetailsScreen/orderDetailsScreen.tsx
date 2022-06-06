@@ -1,4 +1,10 @@
-import { FunctionComponent, useState, useReducer, useEffect, useRef } from "react";
+import {
+  FunctionComponent,
+  useState,
+  useReducer,
+  useEffect,
+  useRef,
+} from "react";
 import { Col, Container, Row, Form, Table, Button } from "react-bootstrap";
 import "./orderDetailsScreen.css";
 import AppState from "mocks/appState";
@@ -21,13 +27,14 @@ import { OrderRequest } from "models/orderRequest";
 import RequestsByUsers from "manageOrderScreen/requestsByUser";
 import Utility from "models/utility";
 import ConfirmationPopup from "../confrimationPopup/confrimationPopup";
+import OrderItemsCollectiveTable from "./orderItemsCollectiveTable";
 const lodash = require("lodash");
 
 interface OrderDetailsScreenProps {}
 
 const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
   //hooks
-  const modalRef = useRef<ConfirmationPopup>()
+  const modalRef = useRef<ConfirmationPopup>();
   const classNames = require("classnames");
   const { id } = useParams();
   let [order, setOrder] = useState<Order>({} as any);
@@ -46,8 +53,8 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
   }, [orderSnapshot]);
 
   const navigate = useNavigate();
-  const [curFilteredUser, setCurFilter] = useState<string>('All');
-  const [curView, setCurView] = useState<"all"|"byUser">("all");
+  const [curFilteredUser, setCurFilter] = useState<string>("All");
+  const [curView, setCurView] = useState<"all" | "byUser" | "byItem">("all");
 
   //methods
 
@@ -90,12 +97,13 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
       <Button
         variant="danger"
         onClick={() => {
-          const modalTitle = `Delete order by ${order.owner.name} with ${Utility.getUniqueUsers(order.requests).length} contributors`;
-          modalRef.current.show(
-            {
-              title:modalTitle,
-              onSubmit:()=>deleteOrder()
-            });              
+          const modalTitle = `Delete order by ${order.owner.name} with ${
+            Utility.getUniqueUsers(order.requests).length
+          } contributors`;
+          modalRef.current.show({
+            title: modalTitle,
+            onSubmit: () => deleteOrder(),
+          });
         }}
       >
         Delete
@@ -103,37 +111,56 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
     );
   }
 
-  function toggleOrderStatusBtn()
-  {
+  function toggleOrderStatusBtn() {
     return showIf(
-        AppState.activeUser.id == order.owner.id,
-        <Button
-          variant="primary"
-          onClick={() => {
-            toggleOrderStatus();
-          }}
-        >
-          Toggle status
-        </Button>
-      )
+      AppState.activeUser.id == order.owner.id,
+      <Button
+        variant="primary"
+        onClick={() => {
+          toggleOrderStatus();
+        }}
+      >
+        Toggle status
+      </Button>
+    );
   }
 
   function changeRequestBtn() {
-    if(!order.is_active)
-      return <></>
-    let label ='Add items to order';
-    if(order.requests.find((req)=>req.user.id == AppState.activeUser.id))
-      label =  'Update/change your order';
+    if (!order.is_active) return <></>;
+    let label = "Add items to order";
+    if (order.requests.find((req) => req.user.id == AppState.activeUser.id))
+      label = "Update/change your order";
     return <Button onClick={onChangeRequest}>{label}</Button>;
   }
 
-  function toggleViewBtn()
-  {
-    if(curView == "all")
-      return <Button onClick={()=>setCurView("byUser")}>Switch orders view</Button>;
-    else
-      return <Button onClick={()=>setCurView('all')}>Switch orders view</Button>;
-
+  function toggleViewBtns() {
+    return (
+      <>
+        {curView != "byUser" ? (
+          <Button onClick={() => setCurView("byUser")}>
+            Switch to user view
+          </Button>
+        ) : (
+          <></>
+        )}
+        <div className="me-2"></div>
+        {curView != "all" ? (
+          <Button onClick={() => setCurView("all")}>
+            Switch to orders view
+          </Button>
+        ) : (
+          <></>
+        )}
+        <div className="me-2"></div>
+        {curView != "byItem" ? (
+          <Button onClick={() => setCurView("byItem")}>
+            Switch to items view
+          </Button>
+        ) : (
+          <></>
+        )}
+      </>
+    );
   }
 
   function orderMetaDetails() {
@@ -150,12 +177,12 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
               <td>Creator</td>
               <td>{order.owner.name}</td>
             </tr>
-            
+
             <tr>
               <td>Shop</td>
               <td>{order.shop.name}</td>
             </tr>
-            
+
             <tr>
               <td>Status</td>
               <td className={statusStyle()}>
@@ -172,7 +199,7 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
                   <div className="me-2"></div>
                   {deleteOrderBtn()}
                   <div className="me-2"></div>
-                  {toggleViewBtn()}
+                  {toggleViewBtns()}
                 </div>
               </td>
             </tr>
@@ -182,58 +209,61 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
     );
   }
 
-
-
   function filters() {
-
     const users = Utility.getUniqueUsers(order.requests);
-    
-    const options = users.map(                
-        (user)=>(<option key={user.id} value={user.id}>{user.name}</option>)
-    )
-    
-    return(
+
+    const options = users.map((user) => (
+      <option key={user.id} value={user.id}>
+        {user.name}
+      </option>
+    ));
+
+    return (
       <>
-      <Form.Label>
-        Filter by user 
-      </Form.Label>
-      <Form.Select 
-      value={curFilteredUser}
-      onChange={    
-          (ev)=>{
-            setCurFilter(ev.currentTarget.value)
-          } 
-      }
-      >
-        <option value={'All'}>All</option>
-        {options}
-      </Form.Select>
+        <Form.Label>Filter by user</Form.Label>
+        <Form.Select
+          value={curFilteredUser}
+          onChange={(ev) => {
+            setCurFilter(ev.currentTarget.value);
+          }}
+        >
+          <option value={"All"}>All</option>
+          {options}
+        </Form.Select>
       </>
-    )
+    );
   }
 
-  function view()
-  {
-    if(curView == "all")
-    {
-      return(<>
-      <div className="mb-4">
-      {filters()}
+  function view() {
+    if (curView == "all") {
+      return (
+        <>
+          <div className="mb-4">{filters()}</div>
 
-      </div>
-       <OrdersTable
-          order={order}
-          onDeleteItem={onDeleteItem}
-          onEditItem={onChangeRequest}
-          filterByUserId={curFilteredUser}
-        ></OrdersTable>
-        <PriceSummary order={order} filterByUserId={curFilteredUser}></PriceSummary>
-      </>);
-    }
-    else 
-    {
-      return <RequestsByUsers order={order}></RequestsByUsers>
-      
+          <OrdersTable
+            order={order}
+            onDeleteItem={onDeleteItem}
+            onEditItem={onChangeRequest}
+            filterByUserId={curFilteredUser}
+          ></OrdersTable>
+          <PriceSummary
+            order={order}
+            filterByUserId={curFilteredUser}
+          ></PriceSummary>
+        </>
+      );
+    } else if (curView == "byUser") {
+      return <RequestsByUsers order={order}></RequestsByUsers>;
+    } else if (curView == "byItem") {
+      return (
+        <>
+          <div className="mb-4">{filters()}</div>
+          <OrderItemsCollectiveTable
+            order={order}
+            filterByUserId={curFilteredUser}
+          ></OrderItemsCollectiveTable>
+        </>
+      );
     }
   }
 
@@ -253,19 +283,16 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
                 <hr />
               </Col>
             </Row>
-            
-            <Row >
-              <Col>
-              </Col>
+
+            <Row>
+              <Col></Col>
             </Row>
 
             <Row>
-              <Col>
-                  {view()}  
-              </Col>
+              <Col>{view()}</Col>
             </Row>
           </Container>
-          <ConfirmationPopup ref={modalRef}/>
+          <ConfirmationPopup ref={modalRef} />
         </div>
       </>
     );
