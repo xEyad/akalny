@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useReducer, useEffect } from "react";
+import { FunctionComponent, useState, useReducer, useEffect, useRef } from "react";
 import { Col, Container, Row, Form, Table, Button } from "react-bootstrap";
 import "./orderDetailsScreen.css";
 import AppState from "mocks/appState";
@@ -20,12 +20,14 @@ import PriceSummary from "./components/priceSummary";
 import { OrderRequest } from "models/orderRequest";
 import RequestsByUsers from "manageOrderScreen/requestsByUser";
 import Utility from "models/utility";
+import ConfirmationPopup from "../confrimationPopup/confrimationPopup";
 const lodash = require("lodash");
 
 interface OrderDetailsScreenProps {}
 
 const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
   //hooks
+  const modalRef = useRef<ConfirmationPopup>()
   const classNames = require("classnames");
   const { id } = useParams();
   let [order, setOrder] = useState<Order>({} as any);
@@ -88,7 +90,12 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
       <Button
         variant="danger"
         onClick={() => {
-          deleteOrder();
+          const modalTitle = `Delete order by ${order.owner.name} with ${Utility.getUniqueUsers(order.requests).length} contributors`;
+          modalRef.current.show(
+            {
+              title:modalTitle,
+              onSubmit:()=>deleteOrder()
+            });              
         }}
       >
         Delete
@@ -258,6 +265,7 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
               </Col>
             </Row>
           </Container>
+          <ConfirmationPopup ref={modalRef}/>
         </div>
       </>
     );

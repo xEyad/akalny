@@ -1,11 +1,12 @@
 import Shop from "models/shop";
 import MenuItem from "models/menuItem";
-import { FunctionComponent,useState,useReducer, useEffect,   } from "react";
+import { FunctionComponent,useState,useReducer, useEffect, useRef,   } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
 import "./createShopScreen.css";
 import AppState from "mocks/appState";
 import { useNavigate, useParams } from "react-router-dom";
 import { collection,doc, setDoc, addDoc, getDocs, getDoc } from 'firebase/firestore';
+import ConfirmationPopup from "../confrimationPopup/confrimationPopup";
 
 interface CreateShopProps {
     
@@ -14,6 +15,7 @@ interface CreateShopProps {
 const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     
     //hooks
+    const modalRef = useRef<ConfirmationPopup>()
     const { id } = useParams();
     const [mode, setMode] = useState<"creation"|"edit">("creation");
 
@@ -46,9 +48,20 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     }
 
     function deleteMenuItem(index:number)
-    {
+    {        
         shop?.menu?.splice(index,1);
         updateShop({} as any);
+    }
+
+    function onDeleteMenuItem(index:number)
+    {   
+        const item = shop?.menu[index];
+        const modalTitle = `Delete ${item.name} (${item.price} EGP)`;
+          modalRef.current.show(
+            {
+              title:modalTitle,
+              onSubmit:()=>deleteMenuItem(index)
+            });              
     }
 
     async function onSubmitShop()
@@ -111,7 +124,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
                 <td>{index+1}</td>
                 <td>{item.name}</td>
                 <td>{item.price} EGP</td>
-                <td><Button variant="danger" onClick={()=>deleteMenuItem(index)}>Delete</Button></td>
+                <td><Button variant="danger" onClick={()=>onDeleteMenuItem(index)}>Delete</Button></td>
             </tr> 
             );
         return <Table striped bordered hover variant="dark" responsive>
@@ -157,6 +170,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
                     </Col> 
                 </Row>
             </Container>
+          <ConfirmationPopup ref={modalRef}/>
         </div>
         </>
      );

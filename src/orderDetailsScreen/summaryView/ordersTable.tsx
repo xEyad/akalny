@@ -1,7 +1,8 @@
+import ConfirmationPopup from "confrimationPopup/confrimationPopup";
 import AppState from "mocks/appState";
 import { Order } from "models/order";
 import { OrderRequest } from "models/orderRequest";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useRef } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
 
 interface OrdersTableProps {
@@ -13,7 +14,7 @@ interface OrdersTableProps {
 
 ///Should be renamed to something like: usersOrderRequestsTable
 const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
-
+    const modalRef=useRef<ConfirmationPopup>()
     ///based on a condition, show jsxElement or elseJSXelement
     function showIf(condition: boolean, jsxElement, elseJSXelement?) {
         if (condition) return jsxElement;
@@ -32,7 +33,19 @@ const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
             {
                showIf(
                 AppState.activeUser?.id == props.order?.owner?.id,
-                <Button variant="danger" onClick={()=>{props.onDeleteItem(request,index)}}>Delete</Button>
+                <Button 
+                    variant="danger" 
+                    onClick={() => {
+                        const modalTitle = `Delete: ${request.item.name}x${request.quantity} (${(request.item.price * request.quantity).toFixed(2)} EGP)`;
+                        modalRef.current.show(
+                        {
+                            title:modalTitle,
+                            onSubmit:()=>props.onDeleteItem(request, index)
+                        });              
+                    }
+                }>
+                    Delete
+                </Button>
                 )    
             }
         </>)
@@ -58,7 +71,7 @@ const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
                 <td>{request.user?.name}</td>
                 <td>{request.item?.name}</td>
                 <td>{request.quantity}</td>
-                <td>{request.item?.price}</td>
+                <td>{request.item?.price} EGP</td>
                 <td>{(new Date(request.date_modified as number)).toLocaleString()}</td>
                 <td >
                     <div className="d-flex justify-content-center">
@@ -87,6 +100,7 @@ const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
 
     return ( <>
         {ordersTable()}
+        <ConfirmationPopup ref={modalRef} />
     </> );
 }
  

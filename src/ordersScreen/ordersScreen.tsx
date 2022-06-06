@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useReducer, useEffect } from "react";
+import { FunctionComponent, useState, useReducer, useEffect, useRef } from "react";
 import { Col, Container, Row, Form, Table, Button } from "react-bootstrap";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import {
@@ -19,6 +19,7 @@ import { Order } from "models/order";
 import { useNavigate } from "react-router-dom";
 import './ordersScreen.css'
 import Utility from "models/utility";
+import ConfirmationPopup from "../confrimationPopup/confrimationPopup";
 const lodash = require("lodash");
 const classNames = require("classnames");
 
@@ -26,6 +27,7 @@ interface OrdersScreenProps {}
 
 const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
   //hooks
+  const modalRef = useRef<ConfirmationPopup>()
   const navigate = useNavigate();
   let [orders, setOrders] = useState<Order[]>([]);
   const [ordersSnapshot, loading, error] = useCollection(
@@ -34,7 +36,7 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
       snapshotListenOptions: { includeMetadataChanges: true },
     }
   );
-
+  
   useEffect(() => {
     if (ordersSnapshot) {
       const ordersPromises: Promise<Order>[] = ordersSnapshot.docs.map(
@@ -48,6 +50,7 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
     }
   }, [ordersSnapshot]);
 
+  
   //methods
   function joinOrder(orderId: string) {
     navigate(`/viewOrder/${orderId}`);
@@ -57,7 +60,8 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
     navigate(`/createOrder`);
   }
 
-  function deleteOrder(orderId: string) {
+
+  function deleteOrder(orderId:string) {    
     deleteDoc(doc(AppState.fireStore, "orders", orderId));
   }
 
@@ -117,8 +121,13 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
             AppState.activeUser.id == item.owner.id,
             <Button
               variant="danger"
-              onClick={() => {
-                deleteOrder(item.id as string);
+              onClick={async () => {
+                const modalTitle = `Delete order by ${item.owner.name} with ${Utility.getUniqueUsers(item.requests).length} contributors`;
+                modalRef.current.show(
+                  {
+                    title:modalTitle,
+                    onSubmit:()=>deleteOrder(item.id as string)
+                  });                
               }}
             >
               Delete
@@ -186,6 +195,7 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
             <Col className="mt-4">{body()}</Col>
           </Row>
         </Container>
+        <ConfirmationPopup ref={modalRef}/>
       </div>
     </>
   );
