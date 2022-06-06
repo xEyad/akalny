@@ -19,6 +19,7 @@ import { Order } from "models/order";
 import { useNavigate } from "react-router-dom";
 import './ordersScreen.css'
 import Utility from "models/utility";
+import { DateTime } from "luxon";
 import ConfirmationPopup from "../confrimationPopup/confrimationPopup";
 const lodash = require("lodash");
 const classNames = require("classnames");
@@ -76,6 +77,7 @@ const OrdersScreen: FunctionComponent<OrdersScreenProps> = () => {
   }
 
   function getOrderDate(order: Order): string {
+    return DateTime.fromMillis(order.creation_date as number).toRelative();
     return new Date(order.creation_date).toLocaleString();
   }
 

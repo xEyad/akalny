@@ -4,6 +4,7 @@ import { Order } from "models/order";
 import { OrderRequest } from "models/orderRequest";
 import { FunctionComponent, useRef } from "react";
 import { Col, Container, Row,Form, Table, Button } from "react-bootstrap";
+import { DateTime } from "luxon";
 
 interface OrdersTableProps {
     order:Order,
@@ -71,7 +72,7 @@ const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
                 <td>{request.item?.name}</td>
                 <td>{request.quantity}</td>
                 <td>{request.item?.price} EGP</td>
-                <td>{(new Date(request.date_modified as number)).toLocaleString()}</td>
+                <td>{DateTime.fromMillis(request.date_modified as number).toRelative()}</td>
                 <td >
                     <div className="d-flex justify-content-center">
                         {rowAction(request,index)}
