@@ -81,7 +81,7 @@ function CreateOrderScreen()
                     <div className="mx-1"></div>
                     <Button variant="primary" onClick={()=>{}}>Edit</Button>
                     <div className="mx-1"></div>
-                    <Button variant="danger" onClick={()=>{onDeleteShop(item.id as string)}}>Delete</Button>
+                    {/* <Button variant="danger" onClick={()=>{onDeleteShop(item.id as string)}}>Delete</Button> */}
                 </td>
             </tr> 
             );
