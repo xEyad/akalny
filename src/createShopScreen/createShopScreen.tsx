@@ -57,15 +57,26 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     {   
         const item = shop?.menu[index];
         const modalTitle = `Delete ${item.name} (${item.price} EGP)`;
-          modalRef.current.show(
-            {
-              title:modalTitle,
-              onSubmit:()=>deleteMenuItem(index)
-            });              
+        modalRef.current.show(
+        {
+            title:modalTitle,
+            onSubmit:()=>deleteMenuItem(index)
+        });              
     }
 
     async function onSubmitShop()
     {        
+        const modalTitle = `Update shop (${shop.name})`;
+        modalRef.current.show(
+        {
+            title:modalTitle,
+            onSubmit:()=>submitShop()
+        });   
+        
+    }
+
+    async function submitShop()
+    {
         if(mode=="creation")
             await addDoc(collection(AppState.fireStore,'shops'),JSON.parse(JSON.stringify(shop)));
         else if(mode=="edit")
