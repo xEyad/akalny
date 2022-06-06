@@ -20,12 +20,11 @@ const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
         if (condition) return jsxElement;
         else return elseJSXelement ? elseJSXelement : <></>;
     }
-
     function rowAction(request:OrderRequest,index:number)
     {   
         return (<>
             {showIf(
-                request.user?.id == AppState.activeUser?.id,
+                request.user?.id == AppState.activeUser?.id && props.order.is_active,
                 <Button variant="primary" onClick={()=>{props.onEditItem(request,index)}}>Edit</Button>
                 )
             }
