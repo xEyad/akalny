@@ -1,15 +1,18 @@
 {
   "files": {
-    "main.css": "/akalny/static/css/main.97effdc8.css",
-    "main.js": "/akalny/static/js/main.53b26e8b.js",
+    "main.css": "/akalny/static/css/main.b0408dcb.css",
+    "main.js": "/akalny/static/js/main.57131dad.js",
     "static/js/787.aca83e3f.chunk.js": "/akalny/static/js/787.aca83e3f.chunk.js",
+    "static/media/default-view.png": "/akalny/static/media/default-view.79d7a1f5b2aa36011e4b.png",
+    "static/media/users-view.png": "/akalny/static/media/users-view.ff769c8eec81cfe4d1d8.png",
+    "static/media/items-view.png": "/akalny/static/media/items-view.3973351f8895e23c1f85.png",
     "index.html": "/akalny/index.html",
-    "main.97effdc8.css.map": "/akalny/static/css/main.97effdc8.css.map",
-    "main.53b26e8b.js.map": "/akalny/static/js/main.53b26e8b.js.map",
+    "main.b0408dcb.css.map": "/akalny/static/css/main.b0408dcb.css.map",
+    "main.57131dad.js.map": "/akalny/static/js/main.57131dad.js.map",
     "787.aca83e3f.chunk.js.map": "/akalny/static/js/787.aca83e3f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.97effdc8.css",
-    "static/js/main.53b26e8b.js"
+    "static/css/main.b0408dcb.css",
+    "static/js/main.57131dad.js"
   ]
 }
