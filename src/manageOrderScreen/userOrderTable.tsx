@@ -14,6 +14,7 @@ import {
 	TextField,
 } from "@mui/material";
 import { styled } from "@mui/styles";
+import { When } from 'react-if';
 
 const StyledAutocomplete = styled(Autocomplete)({
 	"& .MuiAutocomplete-inputRoot": {
@@ -204,14 +205,24 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
 									it to the shop then come back here and
 									select it
 								</span>
-								<Button
-									variant='primary'
-									onClick={() => {
-										onEditShop(shop.id as string);
-									}}
-								>
-									Edit Shop
-								</Button>
+								<div className="d-flex">
+									<Button
+										variant='primary'
+										onClick={() => {
+											onEditShop(shop.id as string);
+										}}
+									>
+										Edit Shop								
+
+									</Button>
+									<When condition={shop.menu_link}>
+										<Button variant="outline-info" className="ms-2">
+											<a 
+											href={shop.menu_link} target="_blank">View menu</a>
+										</Button>
+									</When>
+								</div>
+								
 								<div></div>
 							</div>
 						</td>

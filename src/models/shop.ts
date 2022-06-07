@@ -7,5 +7,6 @@ interface Shop
     delivery:number;
     vatPercentage:number;
     menu:Array<MenuItem>;
+    menu_link?:string;
 }
 export default Shop

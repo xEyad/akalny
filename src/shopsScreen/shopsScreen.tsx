@@ -7,6 +7,7 @@ import { collection,doc, setDoc, addDoc, getDocs, DocumentReference, getDoc, del
 import { useCollection } from 'react-firebase-hooks/firestore';
 import './shopsScreen.css';
 import PasswordConfirmationPopup from "passwordConfirmation/passwordConfirmationPopup";
+import { Else, If, Then } from "react-if";
 
 function ShopsScreen() {
     let [shopsSnapshot, loadingCollection, error] = useCollection(
@@ -74,6 +75,12 @@ function ShopsScreen() {
                 <td>{item.name}</td>
                 <td>{item.delivery} EGP</td>
                 <td>{item.vatPercentage} %</td>
+                <td>
+                    <If condition={item.menu_link}>
+                        <Then><a href={item.menu_link} target="_blank">View</a></Then>
+                        <Else>-</Else>
+                    </If>
+                </td>
                 <td>{item.menu?.length||-1+1} </td>
                 <td className="d-flex justify-content-center">
                     <Button variant="primary" onClick={()=>{onEditShop(item.id as string)}}>Edit</Button>
@@ -89,6 +96,7 @@ function ShopsScreen() {
                 <th>Name</th>
                 <th>Delivery</th>
                 <th>Vat</th>
+                <th>Menu</th>
                 <th>Menu Items</th>
                 <th>Actions</th>
                 </tr>
@@ -98,6 +106,7 @@ function ShopsScreen() {
             </tbody>
         </Table>
     }
+
     function body()
     {
         return ( 

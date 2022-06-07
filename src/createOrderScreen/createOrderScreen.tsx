@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { collection,doc, setDoc, addDoc, getDocs, DocumentReference, getDoc, deleteDoc } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import './createOrderScreen.css';
+import { Else, If, Then } from "react-if";
 function CreateOrderScreen() 
 {
     let [shopsSnapshot, loadingCollection, error] = useCollection(
@@ -75,6 +76,12 @@ function CreateOrderScreen()
                 <td>{item.name}</td>
                 <td>{item.delivery} EGP</td>
                 <td>{item.vatPercentage} %</td>
+                <td>
+                    <If condition={item.menu_link}>
+                        <Then><a href={item.menu_link} target="_blank">View</a></Then>
+                        <Else>-</Else>
+                    </If>
+                </td>
                 <td>{item.menu?.length||-1+1} </td>
                 <td className="d-flex justify-content-center">
                     <Button variant="success" onClick={()=>{onSelectShop(item.id as string)}}>Select</Button>
@@ -92,6 +99,7 @@ function CreateOrderScreen()
                 <th>Name</th>
                 <th>Delivery</th>
                 <th>Vat</th>
+                <th>Menu</th>
                 <th>Menu Items</th>
                 <th>Actions</th>
                 </tr>

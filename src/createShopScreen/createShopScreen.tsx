@@ -7,6 +7,7 @@ import AppState from "mocks/appState";
 import { useNavigate, useParams } from "react-router-dom";
 import { collection,doc, setDoc, addDoc, getDocs, getDoc } from 'firebase/firestore';
 import ConfirmationPopup from "../confrimationPopup/confrimationPopup";
+import { When } from 'react-if';
 
 interface CreateShopProps {
     
@@ -21,7 +22,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
 
     const [activeItem, setActiveItem] = useState<MenuItem>({name:"",price:0});
     let navigate = useNavigate();
-    const initialState:Shop = {menu:[],vatPercentage:14,delivery:0,name:"", };
+    const initialState:Shop = {menu:[],vatPercentage:14,delivery:0,name:"",menu_link:"" };
     const [shop, updateShop] = useReducer(
         (shop: Shop, updates: Shop) => ({
             ...shop,
@@ -93,10 +94,34 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
         </>
     }
 
+    function menuLinkField()
+    {
+        return <>
+        <Form.Label>Online Menu</Form.Label>
+        <div className="d-flex" style={
+                    {
+                        alignItems:"center",
+                    }
+                }>
+                <Form.Control 
+                type="text" 
+                placeholder="https://some-lovely-online-menu.com" 
+                value={shop.menu_link} onChange={(event)=>updateShop({menu_link:event.target.value} as any)}/>
+                
+            <When condition={shop.menu_link}>
+                <Button variant="outline-info" className="ms-2 p-0">
+                    <a 
+                    href={shop.menu_link} target="_blank">View menu</a>
+                </Button>
+            </When>
+            </div>
+        </>
+    }
+
     function vatField()
     {
         return <>
-        <Form.Label>VAT</Form.Label>
+        <Form.Label>VAT percentage</Form.Label>
         <Form.Control type="number" placeholder="14%" value={shop.vatPercentage} onChange={(event)=>updateShop({vatPercentage:Number(event.target.value)} as any)}/>
         </>
     }
@@ -104,7 +129,7 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
     function deliveryField()
     {
         return <>
-        <Form.Label>Delivery</Form.Label>
+        <Form.Label>Delivery (EGP)</Form.Label>
         <Form.Control type="number" placeholder="x EGP" value={shop.delivery || 0} onChange={(event)=>updateShop({delivery:Number(event.target.value)} as any)}/>
         </>
     }
@@ -169,7 +194,15 @@ const CreateShopScreen: FunctionComponent<CreateShopProps> = () => {
                     <Col>{deliveryField()}</Col>
                     <Col>{vatField()}</Col>
                 </Row>
-                <Row className="mt-5">
+                <Row className="mt-2">
+                    
+                    <Col>
+                        {menuLinkField()}
+                    </Col>
+                    <Col></Col>
+                    <Col></Col>
+                </Row>
+                <Row className="mt-2">
                     <Col>
                     <h1 className="text-center">Menu <small className="text-small">(Optional)</small></h1>
                     {menuTable()}
