@@ -260,10 +260,12 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
             onEditItem={onChangeRequest}
             filterByUserId={curFilteredUser}
           ></OrdersTable>
-          <PriceSummary
-            order={order}
-            filterByUserId={curFilteredUser}
-          ></PriceSummary>
+          <When condition={order.requests?.length}>
+            <PriceSummary
+              order={order}
+              filterByUserId={curFilteredUser}
+            ></PriceSummary>
+          </When>
         </>
       );
     } else if (curView == "byUser") {
