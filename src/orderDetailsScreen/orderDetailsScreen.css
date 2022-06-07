@@ -16,3 +16,34 @@ td,tr{
 .order-dead{
     color: red;
 }
+
+.icon-btn
+{
+    border: 1px solid white;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
+    color: white;
+    filter: brightness(0) invert(1);
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+.icon-btn:hover{
+    filter: none;
+    background-color: white;
+}
+
+.icon-btn-active
+{
+    border: 1px solid white;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
+    color: white;
+    margin-right: 10px;
+    cursor: not-allowed;
+    filter: none;
+    background-color: white;
+    border-radius: 10px;
+}

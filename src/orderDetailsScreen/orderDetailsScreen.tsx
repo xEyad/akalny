@@ -1,7 +1,6 @@
 import {
   FunctionComponent,
   useState,
-  useReducer,
   useEffect,
   useRef,
 } from "react";
@@ -14,13 +13,10 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import {
   deleteDoc,
   doc,
-  DocumentData,
-  DocumentSnapshot,
   getDoc,
   setDoc,
 } from "firebase/firestore";
 import { FirebaseConverters } from "models/firebaseConverters";
-import ManageOrderView from "../manageOrderScreen/manageOrderScreen";
 import OrdersTable from "./summaryView/ordersTable";
 import PriceSummary from "./components/priceSummary";
 import { OrderRequest } from "models/orderRequest";
@@ -28,6 +24,12 @@ import RequestsByUsers from "manageOrderScreen/requestsByUser";
 import Utility from "models/utility";
 import ConfirmationPopup from "../confrimationPopup/confrimationPopup";
 import OrderItemsCollectiveTable from "./orderItemsCollectiveTable";
+import { When } from "react-if";
+import usersViewIcon from '../assets/icons/users-view.png';
+import itemsViewIcon from '../assets/icons/items-view.png';
+import defaultViewIcon from '../assets/icons/default-view.png';
+
+
 const lodash = require("lodash");
 
 interface OrderDetailsScreenProps {}
@@ -133,33 +135,35 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
     return <Button onClick={onChangeRequest}>{label}</Button>;
   }
 
-  function toggleViewBtns() {
+  function ToggleViewBtns() {
     return (
-      <>
-        {curView != "byUser" ? (
-          <Button onClick={() => setCurView("byUser")}>
-            Switch to user view
-          </Button>
-        ) : (
-          <></>
-        )}
-        <div className="me-2"></div>
-        {curView != "all" ? (
-          <Button onClick={() => setCurView("all")}>
-            Switch to orders view
-          </Button>
-        ) : (
-          <></>
-        )}
-        <div className="me-2"></div>
-        {curView != "byItem" ? (
-          <Button onClick={() => setCurView("byItem")}>
-            Switch to items view
-          </Button>
-        ) : (
-          <></>
-        )}
-      </>
+      <div className="d-flex flex-column">
+        <span style={{marginBottom:"0.5rem"}}>Alternative views</span>
+        <div className="d-flex">
+
+        <img 
+            className={`icon-btn${curView == "all"?"-active":""}`}
+            title="Switch to default view"
+            src={defaultViewIcon}
+              onClick={() => setCurView("all")}
+              alt="" />  
+         
+          <img 
+            className={`icon-btn${curView == "byItem"?"-active":""}`}
+            src={itemsViewIcon}
+              onClick={() => setCurView("byItem")}
+              title="Switch to items view"
+              alt="" />          
+
+          <img 
+            className={`icon-btn${curView == "byUser"?"-active":""}`}
+            src={usersViewIcon} 
+            onClick={() => setCurView("byUser")}
+            title="Switch to user view"
+            alt="" />
+
+        </div>
+      </div>
     );
   }
 
@@ -198,8 +202,6 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
                   {toggleOrderStatusBtn()}
                   <div className="me-2"></div>
                   {deleteOrderBtn()}
-                  <div className="me-2"></div>
-                  {toggleViewBtns()}
                 </div>
               </td>
             </tr>
@@ -209,7 +211,21 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
     );
   }
 
-  function filters() {
+  function FiltersCols() {
+    return <>
+    <Col>
+      <When condition={curView != "byUser"}>
+        <UsersFilter/>
+      </When>
+    </Col>
+    <Col>
+      <ToggleViewBtns/>
+    </Col>
+    </>
+  }
+
+  function UsersFilter()
+  {
     const users = Utility.getUniqueUsers(order.requests);
 
     const options = users.map((user) => (
@@ -238,8 +254,6 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
     if (curView == "all") {
       return (
         <>
-          <div className="mb-4">{filters()}</div>
-
           <OrdersTable
             order={order}
             onDeleteItem={onDeleteItem}
@@ -257,7 +271,6 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
     } else if (curView == "byItem") {
       return (
         <>
-          <div className="mb-4">{filters()}</div>
           <OrderItemsCollectiveTable
             order={order}
             filterByUserId={curFilteredUser}
@@ -284,8 +297,8 @@ const OrderDetailsScreen: FunctionComponent<OrderDetailsScreenProps> = () => {
               </Col>
             </Row>
 
-            <Row>
-              <Col></Col>
+            <Row className="mb-4">
+                <FiltersCols/>
             </Row>
 
             <Row>
