@@ -99,16 +99,6 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
 		setcurReq([...curOrderRequest]);
 	}
 
-	const formatResult = (item) => {
-		return (
-			<>
-				<span style={{ display: "block", textAlign: "left" }}>
-					{`${item.name} (${item.price} EGP)`}{" "}
-				</span>
-			</>
-		);
-	};
-
 	function deleteItem(index) {
 		curOrderRequest.splice(index, 1);
 		setcurReq([...curOrderRequest]);
@@ -215,10 +205,10 @@ const UserOrderTable: FunctionComponent<UserOrderTableProps> = (props) => {
 										Edit Shop								
 
 									</Button>
-									<When condition={shop.menu_link}>
+									<When condition={shop?.menu_link }>
 										<Button variant="outline-info" className="ms-2">
 											<a 
-											href={shop.menu_link} target="_blank">View menu</a>
+											href={shop?.menu_link} target="_blank">View menu</a>
 										</Button>
 									</When>
 								</div>
