@@ -17,13 +17,13 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { FirebaseConverters } from "models/firebaseConverters";
-import OrdersTable from "./summaryView/ordersTable";
+import OrdersTable from "./components/ordersTable";
 import PriceSummary from "./components/priceSummary";
 import { OrderRequest } from "models/orderRequest";
 import RequestsByUsers from "manageOrderScreen/requestsByUser";
 import Utility from "models/utility";
 import ConfirmationPopup from "../confrimationPopup/confrimationPopup";
-import OrderItemsCollectiveTable from "./orderItemsCollectiveTable";
+import OrderItemsCollectiveTable from "./components/orderItemsCollectiveTable";
 import { When } from "react-if";
 import usersViewIcon from '../assets/icons/users-view.png';
 import itemsViewIcon from '../assets/icons/items-view.png';
