@@ -27,6 +27,7 @@ const OrderItemsCollectiveTable: FunctionComponent<OrderItemsCollectiveTableProp
         for (const [key, value] of Object.entries(itemsMap)) {
             arr.push(value)
           }
+        arr.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
         return arr;
     }
     
