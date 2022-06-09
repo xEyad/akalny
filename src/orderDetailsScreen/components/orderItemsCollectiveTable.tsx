@@ -56,7 +56,7 @@ const OrderItemsCollectiveTable: FunctionComponent<OrderItemsCollectiveTableProp
                 <tr>
                 <th>#</th>
                 <th>Item</th>
-                <th>Qunatity</th>
+                <th>Quantity</th>
                 </tr>
             </thead>
             <tbody>
