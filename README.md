@@ -15,3 +15,6 @@ npm run deploy
 
 # Demo link
 You can check the demo link from this: https://xeyad.github.io/akalny/
+
+# Troubleshooting
+to fix luxon import issue, use this command: npm i --save-dev @types/luxon
