@@ -25,12 +25,6 @@ function App() {
   const navigate = useNavigate();
   const [user, loading, error] = useAuthState(getAuth(AppState.firebaseApp));
   
-  
-  useEffect(() => {
-    console.log('use effect',AppState.isUserSignedFirebase);
-    
-  }, [AppState.isUserSignedFirebase])
-  
   function navbar()
   {
     return <Navbar bg="dark" variant="dark" expand="lg" >

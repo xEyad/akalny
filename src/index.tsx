@@ -30,6 +30,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 AppState.firebaseApp = initializeApp(firebaseConfig);
+signInAnonymously(getAuth(AppState.firebaseApp));
 
 
 const root = ReactDOM.createRoot(
