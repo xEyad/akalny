@@ -17,12 +17,20 @@ import AppState from 'mocks/appState';
 import { User } from 'models/user';
 import OrdersScreen from 'ordersScreen/ordersScreen';
 import ManageOrderScreen from 'manageOrderScreen/manageOrderScreen';
-
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { getAuth, onAuthStateChanged,signInAnonymously } from "firebase/auth";
 
 function App() {
   const [activeUser, setactiveUser] = useState<User | undefined>(AppState.activeUser);
   const navigate = useNavigate();
-
+  const [user, loading, error] = useAuthState(getAuth(AppState.firebaseApp));
+  
+  
+  useEffect(() => {
+    console.log('use effect',AppState.isUserSignedFirebase);
+    
+  }, [AppState.isUserSignedFirebase])
+  
   function navbar()
   {
     return <Navbar bg="dark" variant="dark" expand="lg" >
@@ -64,6 +72,7 @@ function App() {
   }
 
   return (
+    !user? <div>Loading...</div> :
     <>
       {navbar()}
       <Routes>

@@ -15,6 +15,7 @@ class AppState {
     
 
     static firebaseApp:FirebaseApp; 
+    static isUserSignedFirebase:boolean;
     static get fireStore(){return getFirestore(AppState.firebaseApp)};
     static get activeUser():Readonly<User | undefined>{return JSON.parse(localStorage.getItem('activeUser') as string) as User};
     static setActiveUser(user:User) : void

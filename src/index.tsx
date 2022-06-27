@@ -15,6 +15,7 @@ import {
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics"; //must import it
 import AppState from 'mocks/appState';
+import { getAuth, onAuthStateChanged,signInAnonymously } from "firebase/auth";
 
 //should be singlteon intialization
 const firebaseConfig = {
@@ -26,12 +27,15 @@ const firebaseConfig = {
   appId: "1:159604117683:web:5fa85830bd88d1785260c6",
   measurementId: "G-Q85ZJJDNHF"
 };
+
 // Initialize Firebase
 AppState.firebaseApp = initializeApp(firebaseConfig);
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 
 root.render(
   <React.StrictMode>
