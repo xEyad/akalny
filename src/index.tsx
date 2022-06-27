@@ -19,13 +19,13 @@ import { getAuth, onAuthStateChanged,signInAnonymously } from "firebase/auth";
 
 //should be singlteon intialization
 const firebaseConfig = {
-  apiKey: "AIzaSyB_TOE09D4o6Dkjdl4zDXpkwgciFearcHQ",
-  authDomain: "test-area-3e226.firebaseapp.com",
-  projectId: "test-area-3e226",
-  storageBucket: "test-area-3e226.appspot.com",
-  messagingSenderId: "159604117683",
-  appId: "1:159604117683:web:5fa85830bd88d1785260c6",
-  measurementId: "G-Q85ZJJDNHF"
+  apiKey: "AIzaSyDrLXL7fheCKbeauZoY8Rubra7GMqwgC6c",
+  authDomain: "akalny.firebaseapp.com",
+  projectId: "akalny",
+  storageBucket: "akalny.appspot.com",
+  messagingSenderId: "326944183850",
+  appId: "1:326944183850:web:fcfeac86b91722ed85d553",
+  measurementId: "G-84WTRQHMML"
 };
 
 // Initialize Firebase
