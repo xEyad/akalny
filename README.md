@@ -1,6 +1,8 @@
 # Introduction
 this is a lightweight app that enables a group of people to order items from shop/restaurant and get their receipts divided on them and calculated according to what they bought
 
+this is the version that uses public firebase database
+
 # Contributions and new features
 I love the idea but i want new feature/something changed/general bugfix.
 - Sure, you are a developer. so feel free to edit this repo and send me PR and i will approve it.
@@ -11,11 +13,11 @@ Also, you can check the current issues if you want to contribute but have no ide
 Feel free to fork this repo and deploy it for personal use. all you will need is to change the firebase app and create a new one for yours. with firestore enabled
 
 # Deploy command
-based on this https://github.com/gitname/react-gh-pages
-npm run deploy
+1. npm run deploy
+1. upload to psycoders.tech/akalny
 
 # Demo link
-You can check the demo link from this: https://xeyad.github.io/akalny/
+You can check the demo link from this: https://psycoders.tech/akalny
 
 # Troubleshooting
 to fix luxon import issue, use this command: npm i --save-dev @types/luxon
