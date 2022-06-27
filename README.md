@@ -11,6 +11,7 @@ Also, you can check the current issues if you want to contribute but have no ide
 Feel free to fork this repo and deploy it for personal use. all you will need is to change the firebase app and create a new one for yours. with firestore enabled
 
 # Deploy command
+based on this https://github.com/gitname/react-gh-pages
 npm run deploy
 
 # Demo link
