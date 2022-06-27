@@ -86,7 +86,7 @@ const OrdersTable: FunctionComponent<OrdersTableProps> = (props) => {
                 <th>#</th>
                 <th>User</th>
                 <th>Item</th>
-                <th>Qunatity</th>
+                <th>Quantity</th>
                 <th>Unit price</th>
                 <th>Date</th>
                 <th>Actions</th>
